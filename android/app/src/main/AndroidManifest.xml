@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="status200_app"
+        android:label="Grade Genius"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

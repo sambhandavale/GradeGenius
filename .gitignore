@@ -46,6 +46,11 @@ app.*.map.json
 /android/.cxx/
 
 .cxx/
+# Keep shared settings
+!.idea/modules.xml
+!.idea/vcs.xml
+!.idea/libraries/
+
 
 # Firebase and sensitive files
 android/app/google-services.json

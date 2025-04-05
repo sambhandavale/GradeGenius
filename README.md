@@ -1,16 +1,21 @@
-# status200_app
+# GradGenius: Smart Tech for Smarter Grading
+![Teaching Illustration](https://cdni.iconscout.com/illustration/premium/thumb/teaching-illustration-download-in-svg-png-gif-file-formats--teacher-education-school-classroom-pack-illustrations-6336696.png?f=webp)
 
-A new Flutter project.
+<p>An AI-driven solution designed to support overburdened educators by automating assignment grading and delivering personalized feedback to students. This tool enhances the teaching process, promotes individual learning experiences, and aligns with UN SDG 4: Quality Education by ensuring inclusive and equitable educational opportunities.</p>
 
-## Getting Started
+---
+<img src="mvp.png" width="100%"/>
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+<h2>Features</h2>
+<ul>
+  <li>🧠 Generate lecture notes and presentations using AI</li>
+  <li>📝 Create quizzes and assignments automatically</li>
+  <li>📊 Auto-grade student responses for quizzes and assignments</li>
+  <li>🧾 Provide personalized feedback to each student</li>
+  <li>💼 Reduce teacher workload and enhance productivity</li>
+  <li>🎯 Aligns with <strong>UN SDG 4: Quality Education</strong></li>
+</ul>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---

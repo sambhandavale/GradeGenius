@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:gradegenius/providers/authProvider.dart';
 import 'package:gradegenius/splash.dart';
+import 'package:gradegenius/utils/orientation.dart';
+import 'package:provider/provider.dart';
 // import 'package:gradegenius/utils/constants.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  setOrientation();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

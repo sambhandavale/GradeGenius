@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gradegenius/providers/authProvider.dart';
+import 'package:gradegenius/views/auth/home.dart';
+import 'package:provider/provider.dart';
 
 class InfoPopup extends StatefulWidget {
   const InfoPopup({super.key});
@@ -9,9 +12,19 @@ class InfoPopup extends StatefulWidget {
 
 class _InfoPopupState extends State<InfoPopup> {
   int _currentPage = 0;
+  bool isAuth = true;
+
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    isAuth = authProvider.isAuthenticated;
+  }
+
+
 
   void _nextPage() {
-    if (_currentPage < 1) {
+    if (_currentPage < 1 && !isAuth) {
       setState(() {
         _currentPage++;
       });
@@ -61,17 +74,17 @@ class _InfoPopupState extends State<InfoPopup> {
               ),
             ),
             const SizedBox(height: 20),
-            _authOption("Sign In", Colors.black,context),
+            _authOption("Sign In", const Color.fromARGB(255, 20, 20, 20),context),
             const SizedBox(height: 10),
-            _authOption("Sign Up", Colors.black,context),
+            _authOption("Sign Up", const Color.fromARGB(255, 65, 65, 65),context),
             const SizedBox(height: 10),
-            _authOption("Continue as Guest", const Color(0xFFFDEE57),context),
           ],
           const SizedBox(height: 40),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              if(!isAuth)
               Row(
                 children: List.generate(2, (index) {
                   return Container(
@@ -97,7 +110,7 @@ class _InfoPopupState extends State<InfoPopup> {
                   child: Row(
                     children: [
                       Text(
-                        _currentPage == 0 ? "Next" : "Done",
+                        _currentPage == 0 && !isAuth ? "Next" : "Done",
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -135,7 +148,7 @@ Widget _authOption(String text, Color color, BuildContext context) {
       if (text == "Continue as Guest") {
         Navigator.pop(context);
       } else {
-        // for signin and signup
+        showAuthDialog(context, text);
       }
     },
     child: Container(

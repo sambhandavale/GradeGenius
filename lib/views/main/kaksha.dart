@@ -2,9 +2,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gradegenius/components/kaksha/post_card.dart';
-import 'package:gradegenius/components/landing/feature_box.dart';
 import 'package:gradegenius/components/shared/app_bar.dart';
+import 'package:gradegenius/components/shared/kaksha_app_bar.dart';
 import 'package:gradegenius/utils/constants.dart';
+
+final List<Map<String, String>> fileList = [
+  {
+    "filename": "Assignment 0",
+    "datetime": "Mar 25, 15:31",
+  },
+  {
+    "filename": "Tuesday Lecture Notes",
+    "datetime": "Mar 26, 10:00",
+  },
+  {
+    "filename": "Project Guidelines",
+    "datetime": "Mar 27, 14:45",
+  },
+  {
+    "filename": "Syllabus",
+    "datetime": "Mar 28, 09:30",
+  },
+];
+
 
 class Kaksha extends StatefulWidget {
 
@@ -27,9 +47,9 @@ class _KakshaState extends State<Kaksha> {
   return Scaffold(
     extendBodyBehindAppBar: true,
     backgroundColor: Constants.darkThemeBg,
-    appBar: CustomGreetingAppBar(
-      userName: "User",
-      userRole: "Teacher",
+    appBar: KakshaAppBar(
+      kakshaName: "Data Structure",
+      kakshaMembers: "32 Members",
       avatarImage: AssetImage('assets/images/avatar.png'),
     ),
     body: buildKakshaControls()
@@ -101,6 +121,10 @@ class _KakshaState extends State<Kaksha> {
           SizedBox(height: 16),
           if(selectedIndex == 0)
           _buildPosts(),
+          if(selectedIndex == 1)
+          _buildFiles(),
+          if(selectedIndex == 2)
+          _buildDoubts()
         ],
       ),
     );
@@ -149,7 +173,7 @@ class _KakshaState extends State<Kaksha> {
         child: Column(
           children: [
             PostCard(
-              name: 'Samarth',
+              name: 'Shweta',
               dateTime: 'Mar 25, 15:31',
               buttonText: 'View',
               profilePic: '',
@@ -158,7 +182,7 @@ class _KakshaState extends State<Kaksha> {
             ),
             const SizedBox(height: 16),
             PostCard(
-              name: 'Samarth',
+              name: 'Shweta',
               dateTime: 'Mar 25, 15:31',
               buttonText: 'View',
               profilePic: '',
@@ -167,7 +191,7 @@ class _KakshaState extends State<Kaksha> {
             ),
             const SizedBox(height: 16),
             PostCard(
-              name: 'Samarth',
+              name: 'Shweta',
               dateTime: 'Mar 25, 15:31',
               buttonText: 'View',
               profilePic: '',
@@ -180,6 +204,98 @@ class _KakshaState extends State<Kaksha> {
     );
   }
 
+  Widget _buildFiles() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: fileList.map((file) {
+            return _buildFileCard(
+              filename: file['filename']!,
+              datetime: file['datetime']!,
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFileCard({required String filename, required String datetime}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.grey[850],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                filename,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                datetime,
+                style: const TextStyle(
+                  color: Colors.white54,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            width: 36,
+            height: 36,
+            decoration: const BoxDecoration(
+              color: Colors.white10,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.download,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDoubts(){
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            PostCard(
+              name: 'Maitri',
+              dateTime: 'Mar 25, 15:31',
+              buttonText: 'Solve',
+              profilePic: '',
+              title: 'Why is the worst-case time complexity of Quicksort O(n²) but its average-case O(n log n)?`',
+              onPressed: () {},
+            ),
+            const SizedBox(height: 16),
+            PostCard(
+              name: 'Ojasvi',
+              dateTime: 'Mar 25, 15:31',
+              buttonText: 'Solve',
+              profilePic: '',
+              title: 'Why is binary search not applicable to an unsorted array?',
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+    ); 
+  }
 }
 
 

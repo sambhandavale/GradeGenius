@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gradegenius/utils/constants.dart';
 
 class CustomGreetingAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userName;
@@ -17,8 +18,11 @@ class CustomGreetingAppBar extends StatelessWidget implements PreferredSizeWidge
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      iconTheme: const IconThemeData(
+        color: Constants.darkThemeFontColor,
+      ),
       title: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.only(right:10, left:10,top:10),
         child: Row(
           children: [
             Column(
@@ -27,7 +31,7 @@ class CustomGreetingAppBar extends StatelessWidget implements PreferredSizeWidge
                 Text(
                   "Hello, $userName",
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: Constants.darkThemeFontColor,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'GoogleSans',
@@ -36,7 +40,7 @@ class CustomGreetingAppBar extends StatelessWidget implements PreferredSizeWidge
                 Text(
                   userRole,
                   style: const TextStyle(
-                    color: Colors.white70,
+                    color: Constants.darkThemeFontColor,
                     fontSize: 14,
                     fontFamily: 'GoogleSans',
                   ),
@@ -47,7 +51,7 @@ class CustomGreetingAppBar extends StatelessWidget implements PreferredSizeWidge
             CircleAvatar(
               radius: 20,
               // backgroundImage: avatarImage,
-              backgroundColor: Colors.white,
+              backgroundColor: Constants.darkThemeFontColor,
             ),
           ],
         ),

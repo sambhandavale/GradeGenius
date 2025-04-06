@@ -16,6 +16,11 @@ class CreateCardFeature extends StatelessWidget {
   final double? imageRight;
   final double imageWidth;
   final double imageHeight;
+  final bool wantImg;
+
+  final double? ttFontSize;
+  final double? btFontSize;
+  final double? ttbtGap;
 
   const CreateCardFeature({
     super.key,
@@ -32,6 +37,10 @@ class CreateCardFeature extends StatelessWidget {
     this.imageRight,
     this.imageWidth = 400,
     this.imageHeight = 400,
+    this.wantImg = true,
+    this.ttFontSize = 28,
+    this.btFontSize = 44,
+    this.ttbtGap = 0,
   });
 
   @override
@@ -46,18 +55,19 @@ class CreateCardFeature extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            Positioned(
-              top: imageTop,
-              bottom: imageBottom,
-              left: imageLeft,
-              right: imageRight,
-              child: Image.asset(
-                imagePath,
-                width: imageWidth,
-                height: imageHeight,
-                fit: BoxFit.contain,
+            if (wantImg)
+              Positioned(
+                top: imageTop,
+                bottom: imageBottom,
+                left: imageLeft,
+                right: imageRight,
+                child: Image.asset(
+                  imagePath,
+                  width: imageWidth,
+                  height: imageHeight,
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -66,21 +76,22 @@ class CreateCardFeature extends StatelessWidget {
                   Text(
                     topText,
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: ttFontSize,
                       color: Colors.black,
                       fontWeight: FontWeight.w400,
                       fontFamily: 'GoogleSans',
                       height: 1,
                     ),
                   ),
+                  SizedBox(height: ttbtGap,),
                   Text(
                     bottomText,
                     style: TextStyle(
-                      fontSize: 44,
+                      fontSize: btFontSize,
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
                       fontFamily: 'GoogleSans',
-                      height: 1,
+                      // height: 1,
                     ),
                   ),
                   const Spacer(),
@@ -91,7 +102,7 @@ class CreateCardFeature extends StatelessWidget {
                     textColor: Colors.white,
                     iconSize: 36,
                     fontSize: 24,
-                    backgroundColor: Color.fromARGB(255, 10, 10, 10),
+                    backgroundColor: const Color.fromARGB(255, 10, 10, 10),
                     width: double.infinity,
                   ),
                 ],
@@ -102,5 +113,4 @@ class CreateCardFeature extends StatelessWidget {
       ),
     );
   }
-
 }

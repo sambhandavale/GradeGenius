@@ -33,7 +33,7 @@ class IconTextButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         ),
         onPressed: onPressed,
         child: Row(

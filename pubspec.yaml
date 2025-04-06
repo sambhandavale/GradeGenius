@@ -33,6 +33,7 @@ flutter:
     - assets/icons/
     - assets/icons/nav/
     - assets/icons/common/
+    - assets/icons/kaksha/
   fonts:
     - family: Inter
       fonts:

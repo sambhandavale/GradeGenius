@@ -1,77 +1,144 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:gradegenius/utils/constants.dart';
+import 'package:gradegenius/components/shared/bottom_nav.dart'; // Update this path if needed
 
-class CustomBottomNav extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onItemSelected;
+class PPTPage extends StatefulWidget {
+  const PPTPage({super.key});
 
-  CustomBottomNav({
-    super.key,
-    required this.currentIndex,
-    required this.onItemSelected,
-  });
+  @override
+  State<PPTPage> createState() => _PPTPageState();
+}
 
-  final List<String> _icons = [
-    'assets/icons/nav/home.svg',
-    'assets/icons/nav/ppt.svg',
-    'assets/icons/nav/kaksha.svg',
-    'assets/icons/nav/quiz.svg',
-    'assets/icons/nav/profile.svg',
-  ];
+class _PPTPageState extends State<PPTPage> {
+  int selectedTab = 0;
 
-  final List<String> _labels = [
-    "Home",
-    "PPT",
-    "Kaksha",
-    "Quiz",
-    "Profile",
-  ];
+  void _onNavItemTapped(int index) {
+    if (index == 1) return; // Already on PPT page
+    // Example navigation logic
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/home');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/presentation');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/kaksha');
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/quiz');
+        break;
+      case 4:
+        Navigator.pushNamed(context, '/profile');
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 29, 29, 29), // You can change to Colors.transparent if needed
-            borderRadius: BorderRadius.circular(40),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(_icons.length, (index) {
-              final isSelected = currentIndex == index;
-              return GestureDetector(
-                onTap: () => onItemSelected(index),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset(
-                      _icons[index],
-                      width: 24,
-                      height: 24,
-                      colorFilter: ColorFilter.mode(
-                        isSelected
-                            ? const Color.fromARGB(255, 255, 239, 95)
-                            : Colors.white,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _labels[index],
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    )
-                  ],
+    return Scaffold(
+      backgroundColor: Constants.darkThemeBg,
+      bottomNavigationBar: BottomNav(
+        currentIndex: 1,
+        onItemSelected: _onNavItemTapped,
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Add PPT / Notes",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'GoogleSans',
                 ),
-              );
-            }),
+              ),
+              const SizedBox(height: 20),
+
+              // Tabs
+              Row(
+                children: [
+                  _buildTabButton(0, "Presentation"),
+                  const SizedBox(width: 12),
+                  _buildTabButton(1, "Notes"),
+                ],
+              ),
+              const SizedBox(height: 30),
+
+              // Reference Link Input
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: const TextField(
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Add reference link',
+                    hintStyle: TextStyle(color: Colors.white54),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Paste Content Area
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const TextField(
+                    maxLines: null,
+                    expands: true,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Paste your content here',
+                      hintStyle: TextStyle(color: Colors.white54),
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.content_paste, color: Colors.white54),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabButton(int index, String label) {
+    final isSelected = index == selectedTab;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            selectedTab = index;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFFFFB83C) : Colors.grey[800],
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 16,
+                color: isSelected ? Colors.black : Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ),
       ),

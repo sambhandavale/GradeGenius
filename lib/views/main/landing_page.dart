@@ -5,11 +5,17 @@ import 'package:gradegenius/components/landing/pop_up.dart';
 import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:gradegenius/components/shared/bottom_nav.dart';
 import 'package:gradegenius/providers/authProvider.dart';
+import 'package:gradegenius/utils/constants.dart';
 import 'package:gradegenius/views/main/add_assignment.dart';
 import 'package:gradegenius/views/main/create_kaksha.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatefulWidget {
+  final bool popup;
+  final VoidCallback? goToAllKaksha;
+
+  const LandingPage({super.key, required this.popup, this.goToAllKaksha});
+
   @override
   _LandingPageState createState() => _LandingPageState();
 }
@@ -21,15 +27,18 @@ class _LandingPageState extends State<LandingPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      showInfoPopup(context);
+      if (widget.popup) {
+        showInfoPopup(context);
+      }
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
   return Scaffold(
     extendBodyBehindAppBar: true,
-    backgroundColor: const Color.fromARGB(255, 14, 14, 14),
+    backgroundColor: Constants.darkThemeBg,
     appBar: CustomGreetingAppBar(
       userName: "User",
       userRole: "Teacher",
@@ -61,13 +70,34 @@ class _LandingPageState extends State<LandingPage> {
               imageLeft: 100,
               imageHeight: 400,
               imageWidth: 400,
-              onPressed: () {
-                Navigator.of(context).push(
+              onPressed: () async {
+                final result = await Navigator.of(context).push(
                   CupertinoPageRoute(builder: (context) => CreateKaksha()),
                 );
-              },
+
+                if (result == 'goToAllKaksha') {
+                  widget.goToAllKaksha?.call();
+                }
+              }
             ),
 
+
+            const SizedBox(height: 20),
+            CreateCardFeature(
+              imagePath: 'assets/images/ppt.png',
+              topText: 'Generate',
+              bottomText: 'PPT',
+              buttonText: 'Generate',
+              height: 250,
+              imageTop: 0,
+              imageLeft: 100,
+              imageHeight: 300,
+              imageWidth: 300,
+              bgColor: const Color.fromARGB(255, 108, 177, 113),
+              onPressed: () {
+                print("Button tapped! Add navigation later.");
+              },
+            ),
             const SizedBox(height: 20),
             CreateCardFeature(
               imagePath: 'assets/images/ppt.png',
@@ -87,28 +117,9 @@ class _LandingPageState extends State<LandingPage> {
               },
             ),
             const SizedBox(height: 20),
-            // CreateCardFeature(
-            //   imagePath: 'assets/images/ppt.png',
-            //   topText: '',
-            //   bottomText: 'PPT',
-            //   buttonText: 'Generate',
-            //   height: 250,
-            //   imageTop: 0,
-            //   imageLeft: 100,
-            //   imageHeight: 300,
-            //   imageWidth: 300,
-            //   bgColor: const Color.fromARGB(255, 108, 177, 113),
-            //   onPressed: () {
-            //     print("Button tapped! Add navigation later.");
-            //   },
-            // ),
           ],
         ),
       ),
-    ),
-    bottomNavigationBar: Container(
-      color: Colors.transparent,
-      child: CustomBottomNavExample(),
     ),
   );
   

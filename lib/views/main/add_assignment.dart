@@ -57,10 +57,10 @@ class _AddAssignment extends State<AddAssignment> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        color: Colors.transparent,
-        child: CustomBottomNavExample(),
-      ),
+      // bottomNavigationBar: Container(
+      //   color: Colors.transparent,
+      //   child: CustomBottomNavExample(),
+      // ),
     );
   }
 

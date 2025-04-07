@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CustomBottomNavExample extends StatefulWidget {
-  const CustomBottomNavExample({super.key});
+class CustomBottomNav extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> onItemSelected;
 
-  @override
-  State<CustomBottomNavExample> createState() => _CustomBottomNavExampleState();
-}
-
-class _CustomBottomNavExampleState extends State<CustomBottomNavExample> {
-  int _selectedIndex = 0;
+  CustomBottomNav({
+    super.key,
+    required this.currentIndex,
+    required this.onItemSelected,
+  });
 
   final List<String> _icons = [
     'assets/icons/nav/home.svg',
@@ -35,19 +35,15 @@ class _CustomBottomNavExampleState extends State<CustomBottomNavExample> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 29, 29, 29),
+            color: const Color.fromARGB(255, 29, 29, 29), // You can change to Colors.transparent if needed
             borderRadius: BorderRadius.circular(40),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(_icons.length, (index) {
-              final isSelected = _selectedIndex == index;
+              final isSelected = currentIndex == index;
               return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
-                },
+                onTap: () => onItemSelected(index),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -55,6 +51,12 @@ class _CustomBottomNavExampleState extends State<CustomBottomNavExample> {
                       _icons[index],
                       width: 24,
                       height: 24,
+                      colorFilter: ColorFilter.mode(
+                        isSelected
+                            ? const Color.fromARGB(255, 255, 239, 95)
+                            : Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -62,7 +64,8 @@ class _CustomBottomNavExampleState extends State<CustomBottomNavExample> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 11,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
                     )
                   ],
@@ -74,5 +77,4 @@ class _CustomBottomNavExampleState extends State<CustomBottomNavExample> {
       ),
     );
   }
-
 }

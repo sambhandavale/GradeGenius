@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gradegenius/utils/constants.dart';
 
-class CustomGreetingAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String userName;
-  final String userRole;
+class KakshaAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String kakshaName;
+  final String kakshaMembers;
   final ImageProvider avatarImage;
 
-  const CustomGreetingAppBar({
+  const KakshaAppBar({
     super.key,
-    required this.userName,
-    required this.userRole,
+    required this.kakshaName,
+    required this.kakshaMembers,
     required this.avatarImage,
   });
 
@@ -25,11 +25,17 @@ class CustomGreetingAppBar extends StatelessWidget implements PreferredSizeWidge
         padding: const EdgeInsets.only(right:10, left:10,top:10),
         child: Row(
           children: [
+            CircleAvatar(
+              radius: 20,
+              // backgroundImage: avatarImage,
+              backgroundColor: Constants.darkThemeFontColor,
+            ),
+            const SizedBox(width: 9,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Hello, $userName",
+                  kakshaName,
                   style: const TextStyle(
                     color: Constants.darkThemeFontColor,
                     fontSize: 24,
@@ -38,7 +44,7 @@ class CustomGreetingAppBar extends StatelessWidget implements PreferredSizeWidge
                   ),
                 ),
                 Text(
-                  userRole,
+                  kakshaMembers,
                   style: const TextStyle(
                     color: Constants.darkThemeFontColor,
                     fontSize: 14,
@@ -46,12 +52,6 @@ class CustomGreetingAppBar extends StatelessWidget implements PreferredSizeWidge
                   ),
                 ),
               ],
-            ),
-            const Spacer(),
-            CircleAvatar(
-              radius: 20,
-              // backgroundImage: avatarImage,
-              backgroundColor: Constants.darkThemeFontColor,
             ),
           ],
         ),

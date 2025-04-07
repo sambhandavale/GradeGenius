@@ -6,6 +6,7 @@ import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:gradegenius/components/shared/bottom_nav.dart';
 import 'package:gradegenius/providers/authProvider.dart';
 import 'package:gradegenius/utils/constants.dart';
+import 'package:gradegenius/views/main/add_assignment.dart';
 import 'package:gradegenius/views/main/create_kaksha.dart';
 import 'package:provider/provider.dart';
 
@@ -110,7 +111,9 @@ class _LandingPageState extends State<LandingPage> {
               imageWidth: 300,
               bgColor: const Color.fromARGB(255, 108, 177, 113),
               onPressed: () {
-                print("Button tapped! Add navigation later.");
+                Navigator.of(context).push(
+                  CupertinoPageRoute(builder: (context) => AddAssignment()),
+                );
               },
             ),
             const SizedBox(height: 20),

@@ -144,7 +144,6 @@ class _AboutAssignmentState extends State<AboutAssignment> {
     );
   }
 
-
   Widget _buildSubmissionCard({required String name, required String rollno}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),

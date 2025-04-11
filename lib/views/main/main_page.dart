@@ -3,6 +3,7 @@ import 'package:gradegenius/components/shared/bottom_nav.dart';
 import 'package:gradegenius/utils/constants.dart';
 import 'package:gradegenius/views/main/all_kaksha.dart';
 import 'package:gradegenius/views/main/landing_page.dart';
+import 'package:gradegenius/views/main/presentation.dart';
 import 'package:gradegenius/views/static/page_404.dart';
 
 class HomeController extends StatefulWidget {
@@ -25,7 +26,7 @@ class _HomeControllerState extends State<HomeController> {
         });
       },
     ),
-    Page404(),
+    PresentationPage(),
     AllKaksha(),
     Page404(),
     Page404(),

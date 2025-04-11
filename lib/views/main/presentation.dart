@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gradegenius/components/shared/custom_bottom_nav.dart';
 import 'package:gradegenius/components/shared/ppt_app_bar.dart';
 import 'package:gradegenius/utils/constants.dart';
 import 'package:iconsax/iconsax.dart'; // Ensure this import is present
@@ -29,15 +28,15 @@ class _PresentationPageState extends State<PresentationPage> {
     return Scaffold(
       backgroundColor: Constants.darkThemeBg,
       appBar: const PPTAppBar(),
-      bottomNavigationBar: CustomBottomNav(
-        currentIndex: selectedTab,
-        onItemSelected: (index) {
-          setState(() {
-            selectedTab = index;
-            // Add your navigation logic if needed
-          });
-        },
-      ),
+      // bottomNavigationBar: CustomBottomNav(
+      //   currentIndex: selectedTab,
+      //   onItemSelected: (index) {
+      //     setState(() {
+      //       selectedTab = index;
+      //       // Add your navigation logic if needed
+      //     });
+      //   },
+      // ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(

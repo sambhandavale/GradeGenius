@@ -5,24 +5,26 @@ import 'package:gradegenius/components/kaksha/post_card.dart';
 import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:gradegenius/components/shared/kaksha_app_bar.dart';
 import 'package:gradegenius/utils/constants.dart';
+import 'package:gradegenius/views/main/add_assignment.dart';
+import 'package:gradegenius/views/main/assignment.dart';
 
 final List<Map<String, String>> fileList = [
-  {
-    "filename": "Assignment 0",
-    "datetime": "Mar 25, 15:31",
-  },
-  {
-    "filename": "Tuesday Lecture Notes",
-    "datetime": "Mar 26, 10:00",
-  },
-  {
-    "filename": "Project Guidelines",
-    "datetime": "Mar 27, 14:45",
-  },
-  {
-    "filename": "Syllabus",
-    "datetime": "Mar 28, 09:30",
-  },
+  // {
+  //   "filename": "Assignment 0",
+  //   "datetime": "Mar 25, 15:31",
+  // },
+  // {
+  //   "filename": "Tuesday Lecture Notes",
+  //   "datetime": "Mar 26, 10:00",
+  // },
+  // {
+  //   "filename": "Project Guidelines",
+  //   "datetime": "Mar 27, 14:45",
+  // },
+  // {
+  //   "filename": "Syllabus",
+  //   "datetime": "Mar 28, 09:30",
+  // },
 ];
 
 
@@ -79,30 +81,38 @@ class _KakshaState extends State<Kaksha> {
           SizedBox(height: 16),
           Row(
             children: [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[800],
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Add Assignment",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontFamily: 'GoogleSans',
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddAssignment()),
+                  );
+                },
+                child: Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Add Assignment",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontFamily: 'GoogleSans',
+                          ),
                         ),
-                      ),
-                      SvgPicture.asset(
-                        'assets/icons/kaksha/files.svg',
-                        width: 28,
-                        height: 28,
-                      ),
-                    ],
+                        SvgPicture.asset(
+                          'assets/icons/kaksha/files.svg',
+                          width: 28,
+                          height: 28,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -178,7 +188,13 @@ class _KakshaState extends State<Kaksha> {
               buttonText: 'View',
               profilePic: '',
               title: 'Assignment 0',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AboutAssignment(),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 16),
             PostCard(
@@ -187,7 +203,13 @@ class _KakshaState extends State<Kaksha> {
               buttonText: 'View',
               profilePic: '',
               title: 'Assignment 1',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AboutAssignment(),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 16),
             PostCard(
@@ -196,7 +218,13 @@ class _KakshaState extends State<Kaksha> {
               buttonText: 'View',
               profilePic: '',
               title: 'Assignment 3',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AboutAssignment(),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -268,7 +296,7 @@ class _KakshaState extends State<Kaksha> {
       ),
     );
   }
-
+ 
   Widget _buildDoubts(){
     return Expanded(
       child: SingleChildScrollView(

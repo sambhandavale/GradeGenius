@@ -18,6 +18,7 @@ class KakshaModel {
 
 final List<KakshaModel> kakshaList = [
   KakshaModel(name: 'Data Structure', memberCount: 32),
+  KakshaModel(name: 'Physics', memberCount: 0),
 ];
 
 

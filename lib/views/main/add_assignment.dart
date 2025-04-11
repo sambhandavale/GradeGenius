@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:gradegenius/components/landing/pop_up.dart';
 import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:gradegenius/components/shared/bottom_nav.dart';
+import 'package:gradegenius/components/shared/button.dart';
 
 class AddAssignment extends StatefulWidget {
+  const AddAssignment({super.key});
+
   @override
   _AddAssignment createState() => _AddAssignment();
 }
@@ -50,9 +53,25 @@ class _AddAssignment extends State<AddAssignment> {
               const SizedBox(height: 16),
               _buildTextField("Grade"),
               const SizedBox(height: 24),
-              _buildActionButton("File Upload"),
-              const SizedBox(height: 16),
-              _buildActionButton("Publish"),
+              IconTextButton(
+                text: 'File Upload',
+                iconPath: 'assets/icons/common/play.svg',
+                onPressed:(){},
+                textColor: Colors.white,
+                iconSize: 36,
+                fontSize: 24,
+                // width: double.infinity,
+              ),
+              const SizedBox(height: 10,),
+              IconTextButton(
+                text: 'Publish',
+                iconPath: 'assets/icons/common/play.svg',
+                onPressed:(){},
+                textColor: Colors.white,
+                iconSize: 36,
+                fontSize: 24,
+                // width: double.infinity,
+              ),
             ],
           ),
         ),
@@ -115,6 +134,7 @@ class _AddAssignment extends State<AddAssignment> {
       ),
     );
   }
+ 
 }
 
 

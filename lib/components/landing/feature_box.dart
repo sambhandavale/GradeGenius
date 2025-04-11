@@ -73,6 +73,7 @@ class CreateCardFeature extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if(topText.isNotEmpty)
                   Text(
                     topText,
                     style: TextStyle(
@@ -84,6 +85,7 @@ class CreateCardFeature extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: ttbtGap,),
+                  if(bottomText.isNotEmpty)
                   Text(
                     bottomText,
                     style: TextStyle(

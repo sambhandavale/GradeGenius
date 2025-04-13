@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gradegenius/components/shared/bottom_nav.dart';
 import 'package:gradegenius/utils/constants.dart';
 import 'package:gradegenius/views/main/all_kaksha.dart';
+import 'package:gradegenius/views/main/quiz.dart';
 import 'package:gradegenius/views/main/landing_page.dart';
 import 'package:gradegenius/views/main/presentation.dart';
 import 'package:gradegenius/views/static/page_404.dart';
@@ -28,7 +29,7 @@ class _HomeControllerState extends State<HomeController> {
     ),
     PresentationPage(),
     AllKaksha(),
-    Page404(),
+    QuizGeneratorPage(),
     Page404(),
   ];
 

@@ -140,8 +140,8 @@ class _PresentationPageState extends State<PresentationPage> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
-              Iconsax.copy,
+            Icon(
+              Iconsax.document,
               color: Colors.grey,
             ),
             const SizedBox(width: 10),

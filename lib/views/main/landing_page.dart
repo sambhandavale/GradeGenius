@@ -99,14 +99,14 @@ class _LandingPageState extends State<LandingPage> {
             CreateCardFeature(
               imagePath: 'assets/images/ppt.png',
               topText: 'Generate',
-              bottomText: 'PPT',
+              bottomText: 'Notes',
               buttonText: 'Generate',
               height: 250,
               imageTop: 0,
               imageLeft: 100,
               imageHeight: 300,
               imageWidth: 300,
-              bgColor: const Color.fromARGB(255, 108, 177, 113),
+              bgColor: const Color.fromARGB(255, 130, 153, 255),
               onPressed: () {
                 Navigator.of(context).push(
                   CupertinoPageRoute(builder: (context) => AddAssignment()),

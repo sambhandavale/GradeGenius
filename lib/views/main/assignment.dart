@@ -37,7 +37,8 @@ class AboutAssignment extends StatefulWidget {
 
 class _AboutAssignmentState extends State<AboutAssignment> { 
   bool isAuth = true;
-  int selectedIndex = 1;
+  int selectedIndex = 0;
+  bool openStudentAssignment = false;
 
   @override
   void initState() {
@@ -78,7 +79,11 @@ class _AboutAssignmentState extends State<AboutAssignment> {
             ),
           ),
           SizedBox(height: 16),
-          if(selectedIndex == 1)
+          if(openStudentAssignment)
+          _buildStudentAssignment(),
+          if(selectedIndex == 0 && !openStudentAssignment)
+          _buildAboutAssignment(),
+          if(selectedIndex == 1 && !openStudentAssignment)
           _buildSubmissions(),
         ],
       ),
@@ -92,10 +97,11 @@ class _AboutAssignmentState extends State<AboutAssignment> {
       onTap: () {
         setState(() {
           selectedIndex = index;
+          openStudentAssignment = false;
         });
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 22, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? const Color.fromARGB(255, 255, 184, 60) : Colors.grey[800],
           borderRadius: BorderRadius.circular(50),
@@ -116,6 +122,160 @@ class _AboutAssignmentState extends State<AboutAssignment> {
     );
   }
 
+  Widget _buildAboutAssignment() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 24,),
+            const Text(
+              'Assignment 1',
+              style: TextStyle(
+                fontSize: 38,
+                fontFamily: 'GoogleSans',
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+                height: 1
+              ),
+            ),
+        
+            // Due Date
+            const SizedBox(height: 5),
+            Text(
+              'Due April 10, 2025 11:59 PM',
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'GoogleSans',
+                color: Colors.grey[400],
+              ),
+            ),
+        
+            const SizedBox(height: 20),
+        
+            // Task Title
+            const Text(
+              'Task:',
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'GoogleSans',
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+        
+            const SizedBox(height: 5),
+        
+            // Task Description
+            const Text(
+              'Lorem Ipsum is simply dummy text of the printing and typesetting industry. '
+              'Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, '
+              'when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'GoogleSans',
+                color: Colors.white70,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+ 
+  Widget _buildStudentAssignment() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 24,),
+            const Text(
+              'Assignment 1',
+              style: TextStyle(
+                fontSize: 38,
+                fontFamily: 'GoogleSans',
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+                height: 1
+              ),
+            ),
+            const SizedBox(height: 32,),
+            const Text(
+              'Maitri Dalvi',
+              style: TextStyle(
+                fontSize: 32,
+                fontFamily: 'GoogleSans',
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+                height: 1
+              ),
+            ),
+        
+            // Due Date
+            const SizedBox(height: 5),
+            Text(
+              'Due April 10, 2025 11:59 PM',
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'GoogleSans',
+                color: Colors.grey[400],
+              ),
+            ),
+        
+            const SizedBox(height: 20),
+        
+            // Task Title
+            const Text(
+              'Task:',
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'GoogleSans',
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+        
+            const SizedBox(height: 5),
+        
+            // Task Description
+            const Text(
+              'Lorem Ipsum is simply dummy text of the printing and typesetting industry. '
+              'Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, '
+              'when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'GoogleSans',
+                color: Colors.white70,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 16,),
+            _buildSubmissionCard(
+              name: 'Assignment0.pdf',
+              rollno: '',
+              onTap: () {
+                setState(() {
+                  openStudentAssignment = true;
+                });
+              },
+            ),
+            Text(
+              'Grade: 9/10',
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: 'GoogleSans',
+                color: Colors.grey[400],
+              ),
+            ),
+        
+          ],
+        ),
+      ),
+    );
+  }
+ 
   Widget _buildSubmissions() {
     return Expanded(
       child: SingleChildScrollView(
@@ -140,6 +300,11 @@ class _AboutAssignmentState extends State<AboutAssignment> {
               return _buildSubmissionCard(
                 name: file['name']!,
                 rollno: file['rollno']!,
+                onTap: () {
+                  setState(() {
+                    openStudentAssignment = true;
+                  });
+                },
               );
             }),
           ],
@@ -148,56 +313,64 @@ class _AboutAssignmentState extends State<AboutAssignment> {
     );
   }
 
-  Widget _buildSubmissionCard({required String name, required String rollno}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.grey[850],
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+  Widget _buildSubmissionCard({
+    required String name,
+    required String rollno,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap, // This triggers when the card is tapped
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.grey[850],
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                rollno,
-                style: const TextStyle(
-                  color: Colors.white54,
-                  fontSize: 14,
+                const SizedBox(height: 4),
+                if(rollno.isNotEmpty)
+                Text(
+                  rollno,
+                  style: const TextStyle(
+                    color: Colors.white54,
+                    fontSize: 14,
+                  ),
                 ),
+              ],
+            ),
+            Container(
+              width: 36,
+              height: 36,
+              decoration: const BoxDecoration(
+                color: Colors.white10,
+                shape: BoxShape.circle,
               ),
-            ],
-          ),
-          Container(
-            width: 36,
-            height: 36,
-            decoration: const BoxDecoration(
-              color: Colors.white10,
-              shape: BoxShape.circle,
+              child: SvgPicture.asset(
+                'assets/icons/common/play.svg',
+                width: 24,
+                height: 24,
+              ),
             ),
-            child: SvgPicture.asset(
-              'assets/icons/common/play.svg',
-              width: 24,
-              height: 24,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
- 
+  
 
 }
 

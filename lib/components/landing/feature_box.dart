@@ -72,7 +72,6 @@ class CreateCardFeature extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if(topText.isNotEmpty)
                   Text(
@@ -94,9 +93,11 @@ class CreateCardFeature extends StatelessWidget {
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
                       fontFamily: 'GoogleSans',
+                      height: 1
                       // height: 1,
                     ),
                   ),
+                  const Spacer(),
                   IconTextButton(
                     text: buttonText,
                     iconPath: 'assets/icons/common/play.svg',

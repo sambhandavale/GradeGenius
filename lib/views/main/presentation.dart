@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:gradegenius/components/shared/button.dart';
-import 'package:gradegenius/components/shared/ppt_app_bar.dart';
 import 'package:gradegenius/utils/constants.dart';
 import 'package:iconsax/iconsax.dart'; // Ensure this import is present
 

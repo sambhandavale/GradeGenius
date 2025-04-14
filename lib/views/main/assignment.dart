@@ -22,6 +22,10 @@ final List<Map<String, String>> fileList = [
     "name": "Name 4",
     "rollno": "22102B0004",
   },
+  {
+    "name": "Name 5",
+    "rollno": "22102B0005",
+  },
 ];
 
 
@@ -122,7 +126,7 @@ class _AboutAssignmentState extends State<AboutAssignment> {
               topText: 'MarkSheet',
               bottomText: '',
               buttonText: 'Download',
-              height: 200,
+              height: 150,
               imageTop: -50,
               imageLeft: 100,
               imageHeight: 400,

@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundColor: Colors.white, // White circle for profile
+                backgroundColor: Colors.white,
               ),
               const SizedBox(width: 10,),
               Text(
@@ -48,40 +48,94 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       
-      body: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30),
-        child: Column(
-          children: [
-            const Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "Less Grading,     More Teaching – Let AI Handle the Rest!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 35,
-                    fontFamily: 'GoogleSans',
-                    height: 1,
-                  ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: 60,
+            right: -80,
+            child: SvgPicture.asset(
+              'assets/icons/paper-pen.svg',
+              width: 250,
+              height: 250, 
+              fit: BoxFit.contain,
+            ),
+          ),
+
+          Positioned(
+            top: 250,
+            left: -120,
+            child: SvgPicture.asset(
+              'assets/icons/paper-pen.svg',
+              width: 300,
+              height: 300, 
+              fit: BoxFit.contain,
+            ),
+          ),
+
+          Positioned(
+            bottom: -80,
+            right: -60,
+            child: SvgPicture.asset(
+              'assets/icons/paper-pen.svg',
+              width: 250,
+              height: 250, 
+              fit: BoxFit.contain,
+            ),
+          ),
+
+          // Your actual body content
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      "Less Grading,     More Teaching – Let AI Handle the Rest!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 35,
+                        fontFamily: 'GoogleSans',
+                        height: 1,
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconTextButton(
+                      text: 'Sign In',
+                      iconPath: 'assets/icons/common/play.svg',
+                      onPressed: () {
+                        showAuthDialog(context, 'Sign In');
+                      },
+                      textColor: Colors.white,
+                      iconSize: 28,
+                    ),
+                    const SizedBox(width: 10),
+                    IconTextButton(
+                      text: 'Sign Up',
+                      iconPath: 'assets/icons/common/play.svg',
+                      onPressed: () {
+                        showAuthDialog(context, 'Sign Up');
+                      },
+                      textColor: Colors.white,
+                      iconSize: 28,
+                      backgroundColor: Color.fromARGB(255, 68, 68, 68),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 80),
               ],
             ),
-            const SizedBox(height: 20),
-            IconTextButton(
-              text: 'Sign In',
-              iconPath: 'assets/icons/common/play.svg',
-              onPressed: () {
-                showAuthDialog(context,'Sign In');
-              },
-              textColor: Colors.white,
-              iconSize: 28,
-            ),
-
-            const SizedBox(height: 80),
-          ],
-        ),
+          ),
+        ],
       ),
 
     );

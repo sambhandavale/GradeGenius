@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gradegenius/components/landing/feature_box.dart';
 import 'package:gradegenius/components/landing/pop_up.dart';
 import 'package:gradegenius/components/shared/app_bar.dart';
-import 'package:gradegenius/components/shared/bottom_nav.dart';
-import 'package:gradegenius/providers/authProvider.dart';
 import 'package:gradegenius/utils/constants.dart';
 import 'package:gradegenius/views/main/add_assignment.dart';
 import 'package:gradegenius/views/main/create_kaksha.dart';
-import 'package:provider/provider.dart';
 
 class LandingPage extends StatefulWidget {
   final bool popup;
@@ -46,7 +43,7 @@ class _LandingPageState extends State<LandingPage> {
     ),
     body: SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
+        padding: const EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 80),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

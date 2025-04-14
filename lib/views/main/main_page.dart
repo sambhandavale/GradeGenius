@@ -39,14 +39,14 @@ class _HomeControllerState extends State<HomeController> {
     super.dispose();
   }
 
-  void _onItemTapped(int index) {
-    if (index != _selectedIndex) {
-      setState(() {
-        _selectedIndex = index;
-      });
-      _pageController.jumpToPage(index);
-    }
-  }
+  // void _onItemTapped(int index) {
+  //   if (index != _selectedIndex) {
+  //     setState(() {
+  //       _selectedIndex = index;
+  //     });
+  //     _pageController.jumpToPage(index);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gradegenius/components/landing/feature_box.dart';
 import 'package:gradegenius/components/shared/app_bar.dart';
-import 'package:gradegenius/components/shared/bottom_nav.dart';
 import 'package:gradegenius/utils/constants.dart';
 import 'package:gradegenius/views/main/kaksha.dart';
 

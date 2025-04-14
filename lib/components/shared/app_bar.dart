@@ -22,7 +22,7 @@ class CustomGreetingAppBar extends StatelessWidget implements PreferredSizeWidge
         color: Constants.darkThemeFontColor,
       ),
       title: Padding(
-        padding: const EdgeInsets.only(right:10, left:10,top:10),
+        padding: const EdgeInsets.only(right:10, left:10,top:20, bottom:20),
         child: Row(
           children: [
             Column(

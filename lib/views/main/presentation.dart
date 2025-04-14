@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:gradegenius/components/shared/button.dart';
-import 'package:gradegenius/components/shared/ppt_app_bar.dart';
 import 'package:gradegenius/utils/constants.dart';
-import 'package:iconsax/iconsax.dart'; // Ensure this import is present
+// import 'package:iconsax/iconsax.dart';
 
 class PresentationPage extends StatefulWidget {
   const PresentationPage({super.key});
@@ -13,7 +13,7 @@ class PresentationPage extends StatefulWidget {
 }
 
 class _PresentationPageState extends State<PresentationPage> {
-  int selectedIndex = 0;
+  int selectedIndex = 1;
   bool isNotesSelected = false;
 
   final TextEditingController linkController = TextEditingController();
@@ -35,24 +35,20 @@ class _PresentationPageState extends State<PresentationPage> {
         avatarImage: AssetImage('assets/images/avatar.png'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _buildSlideOption(0,'Presentation'),
-                      SizedBox(width: 10),
-                      _buildSlideOption(1,'Notes'),
-                      SizedBox(width: 10),
-                    ],
-                  ),
-                ),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildSlideOption(0,'Presentation','assets/icons/kaksha/posts.svg'),
+                  SizedBox(width: 10),
+                  _buildSlideOption(1,'Notes','assets/icons/kaksha/files.svg'),
+                  SizedBox(width: 10),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
 
@@ -99,7 +95,7 @@ class _PresentationPageState extends State<PresentationPage> {
     );
   }
 
-  Widget _buildSlideOption(int index, String text) {
+  Widget _buildSlideOption(int index, String text, String logo) {
     bool isSelected = selectedIndex == index;
 
     return GestureDetector(
@@ -109,7 +105,7 @@ class _PresentationPageState extends State<PresentationPage> {
         });
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? const Color.fromARGB(255, 255, 184, 60) : Colors.grey[800],
           borderRadius: BorderRadius.circular(50),
@@ -124,6 +120,12 @@ class _PresentationPageState extends State<PresentationPage> {
                 fontSize: 22,
               ),
             ),
+            SizedBox(width: 10),
+            SvgPicture.asset(
+              logo,
+              width: 28,
+              height: 28,
+            ),
           ],
         ),
       ),
@@ -134,16 +136,12 @@ class _PresentationPageState extends State<PresentationPage> {
     return Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: const Color(0xFF141414),
+          color: const Color.fromARGB(255, 49, 49, 49),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Iconsax.document,
-              color: Colors.grey,
-            ),
             const SizedBox(width: 10),
             Expanded(
               child: TextField(

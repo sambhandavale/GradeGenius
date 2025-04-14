@@ -2,29 +2,28 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gradegenius/components/kaksha/post_card.dart';
-import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:gradegenius/components/shared/kaksha_app_bar.dart';
 import 'package:gradegenius/utils/constants.dart';
 import 'package:gradegenius/views/main/add_assignment.dart';
 import 'package:gradegenius/views/main/assignment.dart';
 
 final List<Map<String, String>> fileList = [
-  // {
-  //   "filename": "Assignment 0",
-  //   "datetime": "Mar 25, 15:31",
-  // },
-  // {
-  //   "filename": "Tuesday Lecture Notes",
-  //   "datetime": "Mar 26, 10:00",
-  // },
-  // {
-  //   "filename": "Project Guidelines",
-  //   "datetime": "Mar 27, 14:45",
-  // },
-  // {
-  //   "filename": "Syllabus",
-  //   "datetime": "Mar 28, 09:30",
-  // },
+  {
+    "filename": "Assignment 0",
+    "datetime": "Mar 25, 15:31",
+  },
+  {
+    "filename": "Tuesday Lecture Notes",
+    "datetime": "Mar 26, 10:00",
+  },
+  {
+    "filename": "Project Guidelines",
+    "datetime": "Mar 27, 14:45",
+  },
+  {
+    "filename": "Syllabus",
+    "datetime": "Mar 28, 09:30",
+  },
 ];
 
 
@@ -80,6 +79,7 @@ class _KakshaState extends State<Kaksha> {
           ),
           SizedBox(height: 16),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
                 onTap: () {
@@ -96,7 +96,6 @@ class _KakshaState extends State<Kaksha> {
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           "Add Assignment",
@@ -106,6 +105,7 @@ class _KakshaState extends State<Kaksha> {
                             fontFamily: 'GoogleSans',
                           ),
                         ),
+                        const SizedBox(width: 8,),
                         SvgPicture.asset(
                           'assets/icons/kaksha/files.svg',
                           width: 28,

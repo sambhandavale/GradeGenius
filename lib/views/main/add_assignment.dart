@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gradegenius/components/landing/pop_up.dart';
 import 'package:gradegenius/components/shared/app_bar.dart';
-import 'package:gradegenius/components/shared/bottom_nav.dart';
 import 'package:gradegenius/components/shared/button.dart';
 
 class AddAssignment extends StatefulWidget {
@@ -113,24 +111,6 @@ class _AddAssignment extends State<AddAssignment> {
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
         ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton(String text) {
-    return ElevatedButton.icon(
-      onPressed: () {},
-      icon: const Icon(Icons.play_arrow, color: Colors.black),
-      label: Text(
-        text,
-        style: const TextStyle(color: Colors.black),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.greenAccent[400],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        minimumSize: const Size(double.infinity, 50),
       ),
     );
   }

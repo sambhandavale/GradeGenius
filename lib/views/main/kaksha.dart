@@ -81,14 +81,14 @@ class _KakshaState extends State<Kaksha> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddAssignment()),
-                  );
-                },
-                child: Expanded(
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddAssignment()),
+                    );
+                  },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
@@ -105,7 +105,7 @@ class _KakshaState extends State<Kaksha> {
                             fontFamily: 'GoogleSans',
                           ),
                         ),
-                        const SizedBox(width: 8,),
+                        const SizedBox(width: 8),
                         SvgPicture.asset(
                           'assets/icons/kaksha/files.svg',
                           width: 28,
@@ -128,6 +128,7 @@ class _KakshaState extends State<Kaksha> {
               ),
             ],
           ),
+
           SizedBox(height: 16),
           if(selectedIndex == 0)
           _buildPosts(),

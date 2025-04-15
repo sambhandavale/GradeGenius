@@ -26,6 +26,11 @@ class _HomeControllerState extends State<HomeController> {
           _selectedIndex = 2;
         });
       },
+      goToPPT: () {
+        setState(() {
+          _selectedIndex = 1;
+        });
+      },
     ),
     PresentationPage(),
     AllKaksha(),

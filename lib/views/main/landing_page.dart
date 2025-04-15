@@ -10,8 +10,9 @@ import 'package:gradegenius/views/main/create_kaksha.dart';
 class LandingPage extends StatefulWidget {
   final bool popup;
   final VoidCallback? goToAllKaksha;
+  final VoidCallback? goToPPT;
 
-  const LandingPage({super.key, required this.popup, this.goToAllKaksha});
+  const LandingPage({super.key, required this.popup, this.goToAllKaksha, this.goToPPT});
 
   @override
   _LandingPageState createState() => _LandingPageState();
@@ -92,7 +93,8 @@ class _LandingPageState extends State<LandingPage> {
               imageWidth: 300,
               bgColor: const Color.fromARGB(255, 108, 177, 113),
               onPressed: () {
-                print("Button tapped! Add navigation later.");
+                // widget.goToPPT.call();
+                widget.goToPPT?.call();
               },
             ),
             const SizedBox(height: 20),

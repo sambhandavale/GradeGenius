@@ -121,7 +121,7 @@ class _QuizGeneratorPageState extends State<QuizGeneratorPage> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        _buildSlideOption(0,'Text','assets/icons/kaksha/post.svg'),
+                        _buildSlideOption(0,'Text','assets/icons/kaksha/pen.svg'),
                         const SizedBox(width: 10),
                         _buildSlideOption(1,'Document','assets/icons/kaksha/files.svg'),
                         SizedBox(width: 10),

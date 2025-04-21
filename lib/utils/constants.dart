@@ -11,5 +11,5 @@ class Constants {
   static const String loader = 'assets/images/loading.gif';
   static const Color darkThemeBg = Color.fromARGB(255, 14, 14, 14);
   static const Color darkThemeFontColor = Color.fromARGB(255, 255, 255, 255);
-
+  static const backendUrl = 'https://gradegenius-backend.onrender.com';
 }

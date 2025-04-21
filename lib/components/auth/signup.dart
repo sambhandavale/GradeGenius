@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gradegenius/components/shared/drop_down.dart';
 
 
 class SignUpBox extends StatefulWidget {
@@ -26,7 +27,7 @@ class _SignUpBoxState extends State<SignUpBox> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _roleController = TextEditingController();
+  var _roleSelected = 'teacher';
 
   @override
   Widget build(BuildContext context) {
@@ -97,20 +98,23 @@ class _SignUpBoxState extends State<SignUpBox> {
               ),
             ),
             const SizedBox(height: 10),
-            TextField(
-              controller: _roleController,
-              style: const TextStyle(color: Colors.white),
-              obscureText: false,
-              decoration: InputDecoration(
-                hintText: "Role",
-                hintStyle: const TextStyle(color: Colors.white54),
-                filled: true,
-                fillColor: const Color.fromARGB(255, 19, 19, 19),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50),
-                  borderSide: BorderSide.none,
-                ),
-              ),
+            CustomDropdownField<String>(
+              value: _roleSelected,
+              hint: 'Max Questions',
+              items: ['student', 'teacher']
+                .map((String value) => DropdownMenuItem<String>(
+                      value: value,
+                      child: Text('Role: ${value[0].toUpperCase()}${value.substring(1)}'),
+                    ))
+                .toList(),
+
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    _roleSelected = newValue;
+                  });
+                }
+              },
             ),
             const SizedBox(height: 10),
             Row(
@@ -147,7 +151,7 @@ class _SignUpBoxState extends State<SignUpBox> {
                   username: _usernameController.text,
                   email: _emailController.text,
                   password: _passwordController.text,
-                  role:_roleController.text,
+                  role:_roleSelected,
                 );
               },
               child: Row(

@@ -1,22 +1,27 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gradegenius/api/routes/get/kaksha/assignment.dart/assignment_details.dart';
 import 'package:gradegenius/api/routes/get/kaksha/assignment.dart/download_attachment.dart';
 import 'package:gradegenius/api/routes/get/kaksha/assignment.dart/download_submission_file.dart';
 import 'package:gradegenius/api/routes/get/kaksha/assignment.dart/submissions.dart';
 import 'package:gradegenius/components/landing/feature_box.dart';
+import 'package:gradegenius/components/shared/button.dart';
 import 'package:gradegenius/components/shared/kaksha_app_bar.dart';
 import 'package:gradegenius/models/assignment_details.dart';
 import 'package:gradegenius/models/submissions.dart';
 import 'package:gradegenius/models/users.dart';
 import 'package:gradegenius/providers/authProvider.dart';
 import 'package:gradegenius/utils/constants.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,6 +51,8 @@ class _AboutAssignmentState extends State<AboutAssignment> {
   List<Submission> submissionList = [];
   late Submission selectedSubmission;
   User? _user;
+  List<PlatformFile> _files = [];
+  final _secureStorage = FlutterSecureStorage();
 
   @override
   void initState() {
@@ -215,7 +222,6 @@ class _AboutAssignmentState extends State<AboutAssignment> {
     }
   }
 
-
   Future<void> getSubmissionList() async {
     try {
       final response = await submissionsList(widget.assignmentId);
@@ -234,6 +240,136 @@ class _AboutAssignmentState extends State<AboutAssignment> {
       rethrow;
     }
   }
+
+  Future<void> _pickFiles() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.any,
+      );
+
+      if (result != null) {
+        List<PlatformFile> loadedFiles = [];
+
+        for (PlatformFile file in result.files) {
+          // For mobile platforms where bytes are null but path exists
+          if (file.bytes == null && file.path != null) {
+            try {
+              final fileData = await File(file.path!).readAsBytes();
+              loadedFiles.add(PlatformFile(
+                name: file.name,
+                size: file.size,
+                bytes: fileData,
+                path: file.path,
+              ));
+            } catch (e) {
+              print('Error loading file ${file.name}: $e');
+            }
+          } 
+          // For web/desktop where bytes might be available
+          else if (file.bytes != null) {
+            loadedFiles.add(file);
+          }
+        }
+
+        setState(() {
+          _files = loadedFiles;
+        });
+
+        // Debug print to verify files
+        print('Loaded files:');
+        for (var f in _files) {
+          print('${f.name} - bytes: ${f.bytes != null ? f.bytes!.length : "null"}');
+        }
+      }
+    } catch (e) {
+      print('File picking error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error selecting files: $e')),
+      );
+    }
+  }
+    
+  Future<void> _submitAssignment() async {
+    final token = await _secureStorage.read(key: 'jwt');
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Authentication required')),
+      );
+      return;
+    }
+
+    try {
+      var dio = Dio();
+      var formData = FormData.fromMap({});
+
+      // Handle file uploads with proper content types
+      for (var file in _files) {
+        // Determine content type based on file extension
+        String contentType = 'application/octet-stream'; // default
+        if (file.name.toLowerCase().endsWith('.jpg') || file.name.toLowerCase().endsWith('.jpeg')) {
+          contentType = 'image/jpeg';
+        } else if (file.name.toLowerCase().endsWith('.png')) {
+          contentType = 'image/png';
+        } else if (file.name.toLowerCase().endsWith('.pdf')) {
+          contentType = 'application/pdf';
+        } else if (file.name.toLowerCase().endsWith('.docx')) {
+          contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        }
+
+        if (file.bytes != null) {
+          formData.files.add(MapEntry(
+            'files',
+            MultipartFile.fromBytes(
+              file.bytes!,
+              filename: file.name,
+              contentType: MediaType.parse(contentType),
+            ),
+          ));
+        } else if (file.path != null) {
+          formData.files.add(MapEntry(
+            'files',
+            await MultipartFile.fromFile(
+              file.path!,
+              filename: file.name,
+              contentType: MediaType.parse(contentType),
+            ),
+          ));
+        }
+      }
+
+      print(formData);
+
+      var response = await dio.post(
+        'https://gradegenius-backend.onrender.com/api/kaksha/assignment/submit?assignmentId=${assignmentInfo.id}',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+
+      print('-------$response');
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Assignment Submitted successfully')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      print('Submission error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to submit: ${e.toString()}')),
+      );
+    }
+  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -405,9 +541,38 @@ class _AboutAssignmentState extends State<AboutAssignment> {
                   ),
                 ),
               ],
-            )
+            ),
 
-
+            if(_user?.role == 'student')
+            IconTextButton(
+              text: 'File Upload',
+              iconPath: 'assets/icons/common/play.svg',
+              onPressed: _pickFiles,
+              textColor: Colors.white,
+              iconSize: 36,
+              fontSize: 20,
+            ),
+            if (_files.isNotEmpty)
+            Column(
+              children: _files.map((file) => ListTile(
+                leading: Icon(Icons.insert_drive_file),
+                title: Text(file.name),
+                subtitle: Text(
+                  '${file.size} bytes - '
+                  '${file.bytes != null ? "Ready" : "Error: No bytes"}'
+                ),
+              )).toList(),
+            ),
+            const SizedBox(height: 16,),
+            if(_user?.role == 'student')
+            IconTextButton(
+              text: 'Submit Assignment',
+              iconPath: 'assets/icons/common/play.svg',
+              onPressed: _submitAssignment,
+              textColor: Colors.white,
+              iconSize: 36,
+              fontSize: 20,
+            ),
           ],
         ),
       ),

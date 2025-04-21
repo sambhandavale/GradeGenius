@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:gradegenius/components/shared/button.dart';
 import 'package:dio/dio.dart';
+import 'package:gradegenius/utils/constants.dart';
 import 'package:http_parser/http_parser.dart';
 
 class AddAssignment extends StatefulWidget {
@@ -23,19 +24,6 @@ class _AddAssignmentState extends State<AddAssignment> {
   DateTime? _dueDate;
   List<PlatformFile> _files = [];
   final _secureStorage = FlutterSecureStorage();
-
-  Future<Uint8List?> _loadFileBytes(PlatformFile file) async {
-    if (file.bytes != null) return file.bytes;
-    if (file.path != null) {
-      try {
-        return await File(file.path!).readAsBytes();
-      } catch (e) {
-        print('Error reading file: $e');
-        return null;
-      }
-    }
-    return null;
-  }
 
   Future<void> _pickFiles() async {
     try {
@@ -149,7 +137,7 @@ class _AddAssignmentState extends State<AddAssignment> {
       }
 
       var response = await dio.post(
-        'http://192.168.31.20:6000/api/kaksha/assignment/create',
+        'https://gradegenius-backend.onrender.com/api/kaksha/assignment/create',
         data: formData,
         options: Options(
           headers: {
@@ -182,7 +170,7 @@ class _AddAssignmentState extends State<AddAssignment> {
       );
     }
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(

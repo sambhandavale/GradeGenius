@@ -215,9 +215,10 @@ class _QuizGeneratorPageState extends State<QuizGeneratorPage> {
 
                   const SizedBox(height: 15),
                   IconTextButton(
-                    text: 'Next',
+                    text: 'Not Available',
                     iconPath: 'assets/icons/common/play.svg',
-                    onPressed: onGenerateQuiz,
+                    // onPressed: onGenerateQuiz,
+                    onPressed: (){},
                     textColor: Colors.white,
                     iconSize: 28,
                     backgroundColor: const Color.fromARGB(255, 127, 146, 255),
@@ -300,7 +301,7 @@ class _QuizGeneratorPageState extends State<QuizGeneratorPage> {
                 });
               }
             },
-          ),
+          ), 
           
           const SizedBox(height: 15),
           CustomDropdownField<int>(

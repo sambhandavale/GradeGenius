@@ -80,7 +80,7 @@ class _PresentationPageState extends State<PresentationPage> {
             const SizedBox(height: 20),
             
             IconTextButton(
-              text: 'Generate',
+              text: 'Not Available',
               iconPath: 'assets/icons/common/play.svg',
               onPressed: (){},
               textColor: Colors.white,

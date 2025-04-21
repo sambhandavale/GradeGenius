@@ -20,7 +20,7 @@ class CustomDropdownField<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C1C),
+        color: const Color.fromARGB(255, 19, 19, 19),
         borderRadius: BorderRadius.circular(30),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),

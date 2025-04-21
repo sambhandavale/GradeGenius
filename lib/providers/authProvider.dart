@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:gradegenius/api/routes/get/user/user_details.dart';
+import 'package:gradegenius/models/users.dart';
 import 'package:gradegenius/utils/constants.dart';
 
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthProvider with ChangeNotifier {
   static const _storage = Constants.secureStorage;
-  bool _isAuthenticated = true;
+  bool _isAuthenticated = false;
 
-  // User? _user;
+  User? _user;
 
   bool get isAuthenticated => _isAuthenticated;
 
-  // User? get user => _user;
+  User? get user => _user;
 
   Future<void> login(String token) async {
     try {
@@ -23,18 +25,18 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Future<void> fetchUser() async {
-  //   try {
-  //     final value = await getUser();
-  //     if (value['statusCode'] == 200) {
-  //       _user = User.fromJson(value['data']['user']);
-  //     }
-  //   } catch (e) {
-  //     debugPrint('Error getting user: $e');
-  //   } finally {
-  //     notifyListeners();
-  //   }
-  // }
+  Future<void> fetchUser() async {
+    try {
+      final value = await getUser();
+      if (value['statusCode'] == 200) {
+        _user = User.fromJson(value['data']['user']);
+      }
+    } catch (e) {
+      debugPrint('Error getting user: $e');
+    } finally {
+      notifyListeners();
+    }
+  }
 
   Future<void> logout() async {
     try {
@@ -53,7 +55,7 @@ class AuthProvider with ChangeNotifier {
     try {
       _isAuthenticated = await _isLoggedIn();
       if (!_isAuthenticated) {
-        // _user = null;
+        _user = null;
       }
       notifyListeners();
     } catch (e) {

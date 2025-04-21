@@ -83,9 +83,9 @@ class _QuizGeneratorPageState extends State<QuizGeneratorPage> {
       extendBodyBehindAppBar: true,
       backgroundColor: Constants.darkThemeBg,
       appBar: CustomGreetingAppBar(
-        userName: "User",
-        userRole: "Student",
         avatarImage: AssetImage('assets/images/avatar.png'),
+        addLogout: true,
+        hidBack:true,
       ),
       body: SafeArea(
         child:

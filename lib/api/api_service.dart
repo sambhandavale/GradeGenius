@@ -14,12 +14,12 @@ class ApiService {
 
   String _getBaseUrl() {
     if (kReleaseMode) {
-      return '';
+      return 'https://gradegenius-backend.onrender.com/api';
     } else {
       if (Platform.isAndroid) {
-        return 'https://localhost:4000/api';
+        return 'https://gradegenius-backend.onrender.com/api';
       } else if (Platform.isIOS) {
-        return 'http://localhost:4000/api';
+        return 'https://gradegenius-backend.onrender.com/api';
       } else {
         throw UnsupportedError('Unsupported platform');
       }
@@ -31,7 +31,7 @@ class ApiService {
     _baseUrl = _getBaseUrl();
 
     if (authRequired) {
-      _dio.interceptors.add(AuthInterceptor(_storage)); // Add authentication only if required
+      _dio.interceptors.add(AuthInterceptor(_storage));
     }
   }
 
@@ -46,6 +46,24 @@ class ApiService {
       rethrow;
     }
   }
+
+  Future<Response> getFileRequest(String route) async {
+    try {
+      final url = '$_baseUrl$route';
+      return await _dio.get(
+        url,
+        options: Options(
+          responseType: ResponseType.bytes,
+        ),
+      );
+    } catch (e) {
+      if (e is DioException) {
+        throw ApiException(e.response?.statusCode, e.response?.data);
+      }
+      rethrow;
+    }
+  }
+
 
   Future<Response> postRequest(String route, dynamic data) async {
     try {

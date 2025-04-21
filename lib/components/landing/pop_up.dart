@@ -4,7 +4,9 @@ import 'package:gradegenius/views/auth/home.dart';
 import 'package:provider/provider.dart';
 
 class InfoPopup extends StatefulWidget {
-  const InfoPopup({super.key});
+  final dynamic showAuthDialog;
+
+  const InfoPopup({super.key, this.showAuthDialog});
 
   @override
   State<InfoPopup> createState() => _InfoPopupState();
@@ -15,13 +17,13 @@ class _InfoPopupState extends State<InfoPopup> {
   bool isAuth = true;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    isAuth = authProvider.isAuthenticated;
+    setState(() {
+      isAuth = authProvider.isAuthenticated;
+    });
   }
-
-
 
   void _nextPage() {
     if (_currentPage < 1 && !isAuth) {
@@ -32,6 +34,7 @@ class _InfoPopupState extends State<InfoPopup> {
       Navigator.pop(context);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +85,8 @@ class _InfoPopupState extends State<InfoPopup> {
           const SizedBox(height: 40),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if(!isAuth)
               Row(
@@ -142,49 +146,49 @@ class _InfoPopupState extends State<InfoPopup> {
     );
   }
 
-Widget _authOption(String text, Color color, BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      if (text == "Continue as Guest") {
-        Navigator.pop(context);
-      } else {
-        showAuthDialog(context, text);
-      }
-    },
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(30),
+  Widget _authOption(String text, Color color, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        if (text == "Continue as Guest") {
+          Navigator.pop(context);
+        } else {
+          widget.showAuthDialog(context, text);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                color: color == const Color(0xFFFDEE57) ? Colors.black : Colors.white,
+                fontSize: 18,
+                fontFamily: 'GoogleSans',
+              ),
+            ),
+            Container(
+              width: 30,
+              height: 30,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.play_arrow,
+                color: Colors.black,
+                size: 20,
+              ),
+            ),
+          ],
+        ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            text,
-            style: TextStyle(
-              color: color == const Color(0xFFFDEE57) ? Colors.black : Colors.white,
-              fontSize: 18,
-              fontFamily: 'GoogleSans',
-            ),
-          ),
-          Container(
-            width: 30,
-            height: 30,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.play_arrow,
-              color: Colors.black,
-              size: 20,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
+    );
+  }
 
 }

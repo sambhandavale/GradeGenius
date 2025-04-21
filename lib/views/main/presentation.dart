@@ -13,7 +13,7 @@ class PresentationPage extends StatefulWidget {
 }
 
 class _PresentationPageState extends State<PresentationPage> {
-  int selectedIndex = 1;
+  int selectedIndex = 0;
   bool isNotesSelected = false;
 
   final TextEditingController linkController = TextEditingController();
@@ -30,9 +30,9 @@ class _PresentationPageState extends State<PresentationPage> {
     return Scaffold(
       backgroundColor: Constants.darkThemeBg,
       appBar: CustomGreetingAppBar(
-        userName: "User",
-        userRole: "Teacher",
         avatarImage: AssetImage('assets/images/avatar.png'),
+        addLogout: true,
+        hidBack:true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 30),
@@ -78,7 +78,7 @@ class _PresentationPageState extends State<PresentationPage> {
 
             _buildContentAdd(),
             const SizedBox(height: 20),
-
+            
             IconTextButton(
               text: 'Generate',
               iconPath: 'assets/icons/common/play.svg',

@@ -4,6 +4,7 @@ import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:gradegenius/utils/constants.dart';
 
 class Page404 extends StatefulWidget {
+  const Page404({super.key});
 
   @override
   _Page404State createState() => _Page404State();
@@ -24,8 +25,6 @@ class _Page404State extends State<Page404> {
     extendBodyBehindAppBar: true,
     backgroundColor: Constants.darkThemeBg,
     appBar: CustomGreetingAppBar(
-      userName: "User",
-      userRole: "Teacher",
       avatarImage: AssetImage('assets/images/avatar.png'),
     ),
     body: Center(

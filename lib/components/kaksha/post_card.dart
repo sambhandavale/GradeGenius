@@ -10,6 +10,7 @@ class PostCard extends StatelessWidget {
   final String buttonText;
   final VoidCallback onPressed;
   final Color bgColor;
+  final String type;
 
   const PostCard({
     super.key,
@@ -20,6 +21,7 @@ class PostCard extends StatelessWidget {
     required this.buttonText,
     required this.onPressed,
     this.bgColor = const Color(0xFFFFEB3B),
+    required this.type,
   });
 
   @override
@@ -89,7 +91,7 @@ class PostCard extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Buttons Row
+            if(type == 'assignment')
             Row(
               children: [
                 Expanded(
@@ -101,7 +103,7 @@ class PostCard extends StatelessWidget {
                     iconSize: 36,
                     fontSize: 24,
                     backgroundColor: const Color.fromARGB(255, 10, 10, 10),
-                    width: double.infinity,
+                    width: 'max',
                   ),
                 ),
                 const SizedBox(width: 6),

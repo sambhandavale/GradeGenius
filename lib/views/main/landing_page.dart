@@ -6,20 +6,22 @@ import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:gradegenius/utils/constants.dart';
 import 'package:gradegenius/views/main/add_assignment.dart';
 import 'package:gradegenius/views/main/create_kaksha.dart';
+import 'package:gradegenius/views/main/presentation.dart';
+import 'package:gradegenius/views/main/student/join_kaksha.dart';
 
 class LandingPage extends StatefulWidget {
   final bool popup;
   final VoidCallback? goToAllKaksha;
   final VoidCallback? goToPPT;
+  final String role;
 
-  const LandingPage({super.key, required this.popup, this.goToAllKaksha, this.goToPPT});
+  const LandingPage({super.key, required this.popup, this.goToAllKaksha, this.goToPPT, required this.role});
 
   @override
   _LandingPageState createState() => _LandingPageState();
 }
 
 class _LandingPageState extends State<LandingPage> { 
-  bool isAuth = true;
 
   @override
   void initState() {
@@ -38,9 +40,9 @@ class _LandingPageState extends State<LandingPage> {
     extendBodyBehindAppBar: true,
     backgroundColor: Constants.darkThemeBg,
     appBar: CustomGreetingAppBar(
-      userName: "User",
-      userRole: "Teacher",
       avatarImage: AssetImage('assets/images/avatar.png'),
+      addLogout: true,
+      hidBack:true,
     ),
     body: SafeArea(
       child: SingleChildScrollView(
@@ -60,9 +62,9 @@ class _LandingPageState extends State<LandingPage> {
             const SizedBox(height: 30),
             CreateCardFeature(
               imagePath: 'assets/images/kaksha.png',
-              topText: 'Create',
+              topText: widget.role == 'student' ? 'Join':'Create',
               bottomText: 'Kaksha',
-              buttonText: 'Create',
+              buttonText: widget.role == 'student' ? 'Join':'Create',
               height: 250,
               imageTop: -50,
               imageLeft: 100,
@@ -70,7 +72,7 @@ class _LandingPageState extends State<LandingPage> {
               imageWidth: 400,
               onPressed: () async {
                 final result = await Navigator.of(context).push(
-                  CupertinoPageRoute(builder: (context) => CreateKaksha()),
+                  CupertinoPageRoute(builder: (context) => widget.role == 'teacher' ? CreateKaksha() : JoinKaksha()),
                 );
 
                 if (result == 'goToAllKaksha') {
@@ -81,6 +83,7 @@ class _LandingPageState extends State<LandingPage> {
 
 
             const SizedBox(height: 20),
+            if(widget.role == 'teacher')
             CreateCardFeature(
               imagePath: 'assets/images/ppt.png',
               topText: 'Generate',
@@ -98,6 +101,7 @@ class _LandingPageState extends State<LandingPage> {
               },
             ),
             const SizedBox(height: 20),
+            if(widget.role == 'teacher')
             CreateCardFeature(
               imagePath: 'assets/images/ppt.png',
               topText: 'Generate',
@@ -110,10 +114,8 @@ class _LandingPageState extends State<LandingPage> {
               imageWidth: 300,
               bgColor: const Color.fromARGB(255, 130, 153, 255),
               onPressed: () {
-                Navigator.of(context).push(
-                  CupertinoPageRoute(builder: (context) => AddAssignment()),
-                );
-              },
+                widget.goToPPT?.call();
+              }
             ),
             const SizedBox(height: 20),
           ],

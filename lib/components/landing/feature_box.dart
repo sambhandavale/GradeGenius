@@ -73,41 +73,70 @@ class CreateCardFeature extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if(topText.isNotEmpty)
-                  Text(
-                    topText,
-                    style: TextStyle(
-                      fontSize: ttFontSize,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                      height: 1,
-                    ),
-                  ),
-                  SizedBox(height: ttbtGap,),
-                  if(bottomText.isNotEmpty)
-                  Text(
-                    bottomText,
-                    style: TextStyle(
-                      fontSize: btFontSize,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'GoogleSans',
-                      height: 1
-                      // height: 1,
-                    ),
+                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if(topText.isNotEmpty)
+                      Text(
+                        topText,
+                        style: TextStyle(
+                          fontSize: ttFontSize,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'GoogleSans',
+                          height: 1,
+                        ),
+                      ),
+                      SizedBox(height: ttbtGap,),
+                      if(bottomText.isNotEmpty)
+                      Text(
+                        bottomText,
+                        style: TextStyle(
+                          fontSize: btFontSize,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'GoogleSans',
+                          height: 1
+                          // height: 1,
+                        ),
+                      ),
+                    ],
                   ),
                   const Spacer(),
-                  IconTextButton(
-                    text: buttonText,
-                    iconPath: 'assets/icons/common/play.svg',
-                    onPressed: onPressed,
-                    textColor: Colors.white,
-                    iconSize: 36,
-                    fontSize: 24,
-                    backgroundColor: const Color.fromARGB(255, 10, 10, 10),
-                    width: double.infinity,
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: IconTextButton(
+                          text: buttonText,
+                          iconPath: 'assets/icons/common/play.svg',
+                          onPressed: onPressed,
+                          textColor: Colors.white,
+                          iconSize: 36,
+                          fontSize: 24,
+                          backgroundColor: const Color.fromARGB(255, 10, 10, 10),
+                          width:'max',
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      // Container(
+                      //   padding: const EdgeInsets.symmetric(vertical: 6),
+                      //   decoration: BoxDecoration(
+                      //     color: Colors.black,
+                      //     borderRadius: BorderRadius.circular(40),
+                      //   ),
+                      //   child: IconButton(
+                      //     icon: const Icon(Icons.more_vert),
+                      //     color: Colors.white,
+                      //     iconSize: 32,
+                      //     onPressed: () {
+                      //       // Your action here
+                      //     },
+                      //   ),
+                      // ),
+                    ],
+                  )
+
                 ],
               ),
             ),

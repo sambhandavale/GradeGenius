@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gradegenius/components/shared/bottom_nav.dart';
+import 'package:gradegenius/models/users.dart';
+import 'package:gradegenius/providers/authProvider.dart';
 import 'package:gradegenius/utils/constants.dart';
 import 'package:gradegenius/views/main/all_kaksha.dart';
 import 'package:gradegenius/views/main/quiz.dart';
 import 'package:gradegenius/views/main/landing_page.dart';
 import 'package:gradegenius/views/main/presentation.dart';
 import 'package:gradegenius/views/static/page_404.dart';
+import 'package:provider/provider.dart';
 
 class HomeController extends StatefulWidget {
   const HomeController({super.key});
@@ -17,6 +20,15 @@ class HomeController extends StatefulWidget {
 class _HomeControllerState extends State<HomeController> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
+
+  User? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _user = authProvider.user;
+  }
 
   List<Widget> get _pages => [
     LandingPage(
@@ -31,9 +43,10 @@ class _HomeControllerState extends State<HomeController> {
           _selectedIndex = 1;
         });
       },
+      role: _user!.role,
     ),
     PresentationPage(),
-    AllKaksha(),
+    AllKaksha(role: _user!.role,),
     QuizGeneratorPage(),
     Page404(),
   ];
@@ -43,15 +56,6 @@ class _HomeControllerState extends State<HomeController> {
     _pageController.dispose();
     super.dispose();
   }
-
-  // void _onItemTapped(int index) {
-  //   if (index != _selectedIndex) {
-  //     setState(() {
-  //       _selectedIndex = index;
-  //     });
-  //     _pageController.jumpToPage(index);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

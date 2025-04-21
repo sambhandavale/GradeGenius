@@ -1,7 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gradegenius/api/routes/post/auth/login.dart';
+import 'package:gradegenius/api/routes/post/auth/signup.dart';
+import 'package:gradegenius/components/auth/signin.dart';
+import 'package:gradegenius/components/auth/signup.dart';
 import 'package:gradegenius/components/landing/pop_up.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gradegenius/components/shared/button.dart';
+import 'package:gradegenius/components/shared/toast.dart';
+import 'package:gradegenius/providers/authProvider.dart';
+import 'package:gradegenius/views/main/main_page.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,6 +19,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool showSignInBox = false;
+  bool showSignUpBox = false;
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -16,6 +30,100 @@ class _HomePageState extends State<HomePage> {
       showInfoPopup(context);
     });
   }
+
+  void setLoading(bool loading) {
+    setState(() {
+      isLoading = loading;
+    });
+  }
+
+  Future<void> handleSignup({
+    required String username,
+    required String email,
+    required String password,
+    required String role,
+  }) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    try {
+      setLoading(true);
+      final response = await signup({
+        'username': username,
+        'email': email,
+        'password': password,
+        'role':role,
+      });
+
+      final statusCode = response['statusCode'];
+      final responseData = response['data'];
+  
+
+      switch (statusCode) {
+        case 200:
+          await authProvider.login(responseData['jwtToken']);
+          await authProvider.fetchUser();
+          if (authProvider.isAuthenticated) {
+            showToast(message: 'Sign Up Successfull !!!');
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(builder: (context) => const HomeController()));
+          } else {
+            showToast(message: 'Sign-up failed!', isError: true);
+          }
+          break;
+        default:
+          showToast(message: responseData['error'], isError: true);
+          break;
+      }
+    } catch (e) {
+      debugPrint('Error during signup: $e');
+      showToast(message: 'An error occurred.', isError: true);
+    } finally {
+      setLoading(false);
+    }
+  }
+ 
+  Future<void> handleLogin(String email, String password) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    try {
+      setLoading(true);
+      final response = await login({
+        'email': email,
+        'password': password,
+      });
+
+      final statusCode = response['statusCode'];
+      final responseData = response['data'];
+
+      switch (statusCode) {
+        case 200:
+          await authProvider.login(responseData['jwtToken']);
+          await authProvider.fetchUser();
+          if (authProvider.isAuthenticated) {
+            showToast(message: 'Sign-in successful!');
+              Navigator.of(context).pushReplacement(
+                CupertinoPageRoute(builder: (context) => const HomeController()));
+          } else {
+            showToast(message: 'Sign-in failed!', isError: true);
+          }
+          break;
+        case 400:
+        case 401:
+          showToast(message: 'Invalid credentials.', isError: true);
+          break;
+        case 404:
+          showToast(message: 'User not found.', isError: true);
+          break;
+        default:
+          showToast(message: 'An error occurred.', isError: true);
+          break;
+      }
+    } catch (e) {
+      debugPrint('Error during login: $e');
+      showToast(message: 'An error occurred.', isError: true);
+    } finally {
+      setLoading(false);
+    }
+  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -140,153 +248,44 @@ class _HomePageState extends State<HomePage> {
 
     );
   }
-}
 
-void showInfoPopup(BuildContext context) {
-showModalBottomSheet(
-  context: context,
-  // isDismissible: false,
-  // enableDrag: false,
-  backgroundColor: Colors.transparent,
-  isScrollControlled: true,
-  builder: (context) => const InfoPopup(),
-);
-}
+  void showAuthDialog(BuildContext context, String initialTitle) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
 
-void showAuthDialog(BuildContext context, String initialTitle) {
-  showDialog(
-    context: context,
-    barrierDismissible: true,
-    builder: (BuildContext context) {
-      String title = initialTitle;
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+              backgroundColor: const Color(0xFF1E1E1E),
+              child: initialTitle == 'Sign In'
+                  ? SignInBox(
+                      setLoading: setLoading,
+                      handleLogin: handleLogin,
+                    )
+                  : SignUpBox(
+                      handleSignup: handleSignup,
+                      setLoading: setLoading,
+                    ),
+            );
+          },
+        );
+      },
+    );
+  }
 
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return Dialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-            backgroundColor: const Color(0xFF1E1E1E),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontFamily: 'GoogleSans',
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: "   Enter Email",
-                      hintStyle: const TextStyle(
-                        color: Colors.white54,
-                        fontFamily: 'GoogleSans'
-                      ),
-                      filled: true,
-                      fillColor: Colors.black,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    style: const TextStyle(color: Colors.white),
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: "   Password",
-                      hintStyle: const TextStyle(color: Colors.white54),
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 19, 19, 19),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  if (title == "Sign In")
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: false,
-                          onChanged: (_) {},
-                          activeColor: Colors.orange,
-                        ),
-                        const Text(
-                          "Remember Me",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        title == "Sign In" ? "Don't have an account? " : "Already have an account? ",
-                        style: const TextStyle(color: Colors.white70),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            title = title == "Sign In" ? "Sign Up" : "Sign In";
-                          });
-                        },
-                        child: Text(
-                          title == "Sign In" ? "Sign Up" : "Sign In",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF76BC7B),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontFamily: 'GoogleSans',
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        SvgPicture.asset(
-                          'assets/icons/common/play.svg',
-                          width: 28,
-                          height: 28,
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    },
-  );
+  void showInfoPopup(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      // isDismissible: false,
+      // enableDrag: false,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => InfoPopup(showAuthDialog: showAuthDialog),
+    );
+  }
 }
 
 

@@ -1,33 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gradegenius/api/routes/get/kaksha/list_posts.dart';
 import 'package:gradegenius/components/kaksha/post_card.dart';
 import 'package:gradegenius/components/shared/kaksha_app_bar.dart';
+import 'package:gradegenius/models/kaksha_post.dart';
+import 'package:gradegenius/models/users.dart';
+import 'package:gradegenius/providers/authProvider.dart';
 import 'package:gradegenius/utils/constants.dart';
 import 'package:gradegenius/views/main/add_assignment.dart';
 import 'package:gradegenius/views/main/assignment.dart';
-
-final List<Map<String, String>> fileList = [
-  {
-    "filename": "Assignment 0",
-    "datetime": "Mar 25, 15:31",
-  },
-  {
-    "filename": "Tuesday Lecture Notes",
-    "datetime": "Mar 26, 10:00",
-  },
-  {
-    "filename": "Project Guidelines",
-    "datetime": "Mar 27, 14:45",
-  },
-  {
-    "filename": "Syllabus",
-    "datetime": "Mar 28, 09:30",
-  },
-];
-
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class Kaksha extends StatefulWidget {
+  final String kakshaId;
+  final int members;
+  final String kakshaName;
+
+  const Kaksha({super.key, required this.kakshaId, required this.members, required this.kakshaName});
 
   @override
   _KakshaState createState() => _KakshaState();
@@ -36,11 +27,50 @@ class Kaksha extends StatefulWidget {
 class _KakshaState extends State<Kaksha> { 
   bool isAuth = true;
   int selectedIndex = 0;
+  List<Post> posts = [];
+  bool isLoading = true;
+  User? _user;
 
   @override
   void initState() {
     super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _user = authProvider.user;
+    fetchKakshaPosts();
   }
+
+  String _formatDate(DateTime date) {
+    final months = [
+      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+
+    final localDate = DateFormat('HH:mm').format(date.toLocal());
+
+    return '${months[date.month]} ${date.day}, $localDate';
+  }
+
+
+
+  Future<void> fetchKakshaPosts() async {
+    try {
+      final res = await allKakshaPosts(widget.kakshaId);
+
+      final dataMap = res['data'] as Map<String, dynamic>;
+      final postList = dataMap['posts'] as List;
+
+      setState(() {
+        posts = postList.map((json) => Post.fromJson(json)).toList();
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      debugPrint('Error fetching posts: $e');
+    }
+  }
+
 
 
   @override
@@ -49,8 +79,8 @@ class _KakshaState extends State<Kaksha> {
     extendBodyBehindAppBar: true,
     backgroundColor: Constants.darkThemeBg,
     appBar: KakshaAppBar(
-      kakshaName: "Data Structure",
-      kakshaMembers: "32 Members",
+      kakshaName: widget.kakshaName,
+      kakshaMembers: "${widget.members} Members",
       avatarImage: AssetImage('assets/images/avatar.png'),
     ),
     body: buildKakshaControls()
@@ -70,8 +100,8 @@ class _KakshaState extends State<Kaksha> {
               children: [
                 _buildSlideOption(0,'Posts', 'assets/icons/kaksha/posts.svg'),
                 SizedBox(width: 10),
-                _buildSlideOption(1,'Files', 'assets/icons/kaksha/files.svg'),
-                SizedBox(width: 10),
+                // _buildSlideOption(1,'Files', 'assets/icons/kaksha/files.svg'),
+                // SizedBox(width: 10),
                 _buildSlideOption(2,'Doubts', 'assets/icons/kaksha/files.svg'),
                 SizedBox(width: 10),
               ],
@@ -84,10 +114,12 @@ class _KakshaState extends State<Kaksha> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddAssignment()),
-                    );
+                    if(_user?.role == 'teacher'){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddAssignment(kakshaId: widget.kakshaId,)),
+                      );
+                    }
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -98,7 +130,7 @@ class _KakshaState extends State<Kaksha> {
                     child: Row(
                       children: [
                         Text(
-                          "Add Assignment",
+                          _user?.role == 'teacher' ? "Add Assignment" : 'Ask Doubt',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
@@ -106,6 +138,7 @@ class _KakshaState extends State<Kaksha> {
                           ),
                         ),
                         const SizedBox(width: 8),
+                        if(_user?.role == 'teacher')
                         SvgPicture.asset(
                           'assets/icons/kaksha/files.svg',
                           width: 28,
@@ -131,9 +164,9 @@ class _KakshaState extends State<Kaksha> {
 
           SizedBox(height: 16),
           if(selectedIndex == 0)
-          _buildPosts(),
-          if(selectedIndex == 1)
-          _buildFiles(),
+          _buildPosts(widget.kakshaId,widget.members,widget.kakshaName),
+          // if(selectedIndex == 1)
+          // _buildFiles(),
           if(selectedIndex == 2)
           _buildDoubts()
         ],
@@ -178,75 +211,58 @@ class _KakshaState extends State<Kaksha> {
     );
   }
 
-  Widget _buildPosts() {
+  Widget _buildPosts(String kakshaId,int members,String name) {
     return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            PostCard(
-              name: 'Shweta',
-              dateTime: 'Mar 25, 15:31',
-              buttonText: 'View',
-              profilePic: '',
-              title: 'Assignment 0',
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => AboutAssignment(),
-                  ),
-                );
-              },
+      child: posts.isEmpty
+          ? Center(
+              child: Text(
+                'No posts yet.',
+                style: TextStyle(color: Colors.white),
+              ),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                children: posts.map((post) {
+                  return Column(
+                    children: [
+                      PostCard(
+                        name: post.createdBy.username,
+                        dateTime: _formatDate(post.createdAt),
+                        buttonText: 'View',
+                        profilePic: '',
+                        title: post.title,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => AboutAssignment(kakshaId: kakshaId,members: members,kakshaName: name,assignmentId: post.typeId!,),
+                            ),
+                          );
+                        },
+                        type:post.type,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  );
+                }).toList(),
+              ),
             ),
-            const SizedBox(height: 16),
-            PostCard(
-              name: 'Shweta',
-              dateTime: 'Mar 25, 15:31',
-              buttonText: 'View',
-              profilePic: '',
-              title: 'Assignment 1',
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => AboutAssignment(),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-            PostCard(
-              name: 'Shweta',
-              dateTime: 'Mar 25, 15:31',
-              buttonText: 'View',
-              profilePic: '',
-              title: 'Assignment 3',
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => AboutAssignment(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 
-  Widget _buildFiles() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: fileList.map((file) {
-            return _buildFileCard(
-              filename: file['filename']!,
-              datetime: file['datetime']!,
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
+  // Widget _buildFiles() {
+  //   return Expanded(
+  //     child: SingleChildScrollView(
+  //       child: Column(
+  //         children: fileList.map((file) {
+  //           return _buildFileCard(
+  //             filename: file['filename']!,
+  //             datetime: file['datetime']!,
+  //           );
+  //         }).toList(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildFileCard({required String filename, required String datetime}) {
     return Container(
@@ -303,23 +319,15 @@ class _KakshaState extends State<Kaksha> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            PostCard(
-              name: 'Maitri',
-              dateTime: 'Mar 25, 15:31',
-              buttonText: 'Solve',
-              profilePic: '',
-              title: 'Why is the worst-case time complexity of Quicksort O(n²) but its average-case O(n log n)?`',
-              onPressed: () {},
-            ),
-            const SizedBox(height: 16),
-            PostCard(
-              name: 'Ojasvi',
-              dateTime: 'Mar 25, 15:31',
-              buttonText: 'Solve',
-              profilePic: '',
-              title: 'Why is binary search not applicable to an unsorted array?',
-              onPressed: () {},
-            ),
+            // PostCard(
+            //   name: 'Maitri',
+            //   dateTime: 'Mar 25, 15:31',
+            //   buttonText: 'Solve',
+            //   profilePic: '',
+            //   title: 'Why is the worst-case time complexity of Quicksort O(n²) but its average-case O(n log n)?`',
+            //   onPressed: () {},
+            // ),
+            // const SizedBox(height: 16),
           ],
         ),
       ),

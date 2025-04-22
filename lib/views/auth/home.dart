@@ -264,10 +264,12 @@ class _HomePageState extends State<HomePage> {
                   ? SignInBox(
                       setLoading: setLoading,
                       handleLogin: handleLogin,
+                      isLoading:isLoading,
                     )
                   : SignUpBox(
                       handleSignup: handleSignup,
                       setLoading: setLoading,
+                      isLoading:isLoading,
                     ),
             );
           },

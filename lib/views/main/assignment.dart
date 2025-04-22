@@ -53,6 +53,7 @@ class _AboutAssignmentState extends State<AboutAssignment> {
   User? _user;
   List<PlatformFile> _files = [];
   final _secureStorage = FlutterSecureStorage();
+  bool assignmentSubmitted = false;
 
   @override
   void initState() {
@@ -77,6 +78,9 @@ class _AboutAssignmentState extends State<AboutAssignment> {
         final assignment = AssignmentDetails.fromJson(response['data']['assignment']);
         setState(() {
           assignmentInfo = assignment;
+          assignmentSubmitted = assignment.submissions.any(
+            (submission) => submission.student == _user?.id,
+          );
           isLoading = false;
         });
       } else {
@@ -194,7 +198,9 @@ class _AboutAssignmentState extends State<AboutAssignment> {
 
       if (response['statusCode'] == 200) {
         final bytes = Uint8List.fromList(response['bytes'] as List<int>);
-        final fileRecord = selectedSubmission.files[0];
+        final fileRecord = assignmentInfo.submissions.firstWhere(
+            (submission) => submission.student == _user?.id,
+          ).files[0];
         final filename = fileRecord.filename;
 
         final tempDir = await getTemporaryDirectory();
@@ -319,7 +325,7 @@ class _AboutAssignmentState extends State<AboutAssignment> {
 
         if (file.bytes != null) {
           formData.files.add(MapEntry(
-            'files',
+            'submissionFiles',
             MultipartFile.fromBytes(
               file.bytes!,
               filename: file.name,
@@ -328,7 +334,7 @@ class _AboutAssignmentState extends State<AboutAssignment> {
           ));
         } else if (file.path != null) {
           formData.files.add(MapEntry(
-            'files',
+            'submissionFiles',
             await MultipartFile.fromFile(
               file.path!,
               filename: file.name,
@@ -338,7 +344,12 @@ class _AboutAssignmentState extends State<AboutAssignment> {
         }
       }
 
-      print(formData);
+      for (var file in formData.files) {
+        print('Key: ${file.key}');
+        print('Filename: ${file.value.filename}');
+        print('Content-Type: ${file.value.contentType}');
+        print('Length: ${file.value.length}');
+      }
 
       var response = await dio.post(
         'https://gradegenius-backend.onrender.com/api/kaksha/assignment/submit?assignmentId=${assignmentInfo.id}',
@@ -357,7 +368,12 @@ class _AboutAssignmentState extends State<AboutAssignment> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Assignment Submitted successfully')),
         );
-      } else {
+      } else if(response.statusCode == 409){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Assignment Already Submitted.')),
+        );
+      } 
+      else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: ${response.statusCode}')),
         );
@@ -544,6 +560,7 @@ class _AboutAssignmentState extends State<AboutAssignment> {
             ),
 
             if(_user?.role == 'student')
+            if(!assignmentSubmitted)
             IconTextButton(
               text: 'File Upload',
               iconPath: 'assets/icons/common/play.svg',
@@ -563,12 +580,95 @@ class _AboutAssignmentState extends State<AboutAssignment> {
                 ),
               )).toList(),
             ),
-            const SizedBox(height: 16,),
+            const SizedBox(height: 48,),
+            const Text(
+              'Your File',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'GoogleSans',
+                fontSize: 16,
+                height: 1
+              ),
+            ),
+            const SizedBox(height: 10,),
+            _buildSubmissionCard(
+              name:  assignmentInfo.submissions.firstWhere(
+                (submission) => submission.student == _user?.id,
+              ).files[0].filename, 
+              rollno: '', 
+              onTap: (){
+                // shareAttachmentFile(assignmentInfo.attachments[0].fileId);
+                openSubmissionFile(
+                  assignmentInfo.id,
+                  assignmentInfo.submissions.firstWhere(
+                    (submission) => submission.student == _user?.id,
+                  ).student,
+                  assignmentInfo.submissions.firstWhere(
+                    (submission) => submission.student == _user?.id,
+                  ).files[0].fileId,
+                );
+              },
+              icon: 'assets/icons/common/download.svg',
+              showIcon: false,
+            ),
+            Row(
+              children: [
+                TextButton.icon(
+                  onPressed: () {
+                    openSubmissionFile(
+                      assignmentInfo.id,
+                      assignmentInfo.submissions.firstWhere(
+                        (submission) => submission.student == _user?.id,
+                      ).student,
+                      assignmentInfo.submissions.firstWhere(
+                        (submission) => submission.student == _user?.id,
+                      ).files[0].fileId,
+                    );
+                  },
+                  icon: Icon(Icons.open_in_new, color: Colors.white),
+                  label: Text(
+                    'Open',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'GoogleSans',
+                      fontSize: 16,
+                      height: 1
+                    ),
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: () {
+                      shareSubmissionFile(
+                        assignmentInfo.id,
+                        assignmentInfo.submissions.firstWhere(
+                          (submission) => submission.student == _user?.id,
+                        ).student,
+                        assignmentInfo.submissions.firstWhere(
+                          (submission) => submission.student == _user?.id,
+                        ).files[0].fileId,
+                        assignmentInfo.submissions.firstWhere(
+                          (submission) => submission.student == _user?.id,
+                        ).files[0].contentType,
+                      );
+                  },
+                  icon: Icon(Icons.share, color: Colors.white),
+                  label: Text(
+                    'Share',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'GoogleSans',
+                      fontSize: 16,
+                      height: 1
+                    ),
+                  ),
+                ),
+              ],
+            ),
             if(_user?.role == 'student')
             IconTextButton(
-              text: 'Submit Assignment',
-              iconPath: 'assets/icons/common/play.svg',
-              onPressed: _submitAssignment,
+              text: !assignmentSubmitted ? 'Submit Assignment' :'Submitted',
+              iconPath: !assignmentSubmitted ? 'assets/icons/common/play.svg' : 'assets/icons/common/tick.svg',
+              onPressed: !assignmentSubmitted ? _submitAssignment : (){},
               textColor: Colors.white,
               iconSize: 36,
               fontSize: 20,
@@ -719,7 +819,7 @@ class _AboutAssignmentState extends State<AboutAssignment> {
               imagePath: 'assets/images/kaksha.png',
               topText: 'MarkSheet',
               bottomText: '',
-              buttonText: 'Download',
+              buttonText: 'Not Available',
               height: 150,
               imageTop: -50,
               imageLeft: 100,

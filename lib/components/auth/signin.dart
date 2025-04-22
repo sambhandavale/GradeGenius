@@ -6,15 +6,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SignInBox extends StatefulWidget {
   final Function(bool) setLoading;
   final Future<void> Function(String, String) handleLogin;
+  final bool isLoading;
 
   const SignInBox({
     required this.setLoading,
     required this.handleLogin, 
+    required this.isLoading,
     super.key,
   });
 
   @override
-  State<SignInBox> createState() => _SignInBoxState();
+  State<SignInBox> createState() => _SignInBoxState(); 
 }
 
 class _SignInBoxState extends State<SignInBox> {
@@ -23,6 +25,7 @@ class _SignInBoxState extends State<SignInBox> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -50,6 +53,12 @@ class _SignInBoxState extends State<SignInBox> {
       await prefs.remove('password');
       await prefs.setBool('rememberMe', false);
     }
+  }
+
+  void setLoading(bool loading) {
+    setState(() {
+      isLoading = loading;
+    });
   }
 
   @override
@@ -179,16 +188,16 @@ class _SignInBoxState extends State<SignInBox> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   _saveCredentials();
-                  widget.setLoading(true);
+                  setLoading(true);
                   widget
                       .handleLogin(
                     emailController.text,
                     passwordController.text,
                   )
                       .then((_) {
-                    widget.setLoading(false);
+                    setLoading(false);
                   }).catchError((error) {
-                    widget.setLoading(false);
+                    setLoading(false);
                     showToast(
                       message: 'An error occurred.',
                       isError: true,
@@ -199,8 +208,8 @@ class _SignInBoxState extends State<SignInBox> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'SignIn',
+                  Text(
+                    !isLoading ? 'SignIn' : 'Loading..',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,

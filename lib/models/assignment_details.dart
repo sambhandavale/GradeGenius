@@ -6,8 +6,8 @@ class AssignmentDetails {
   String createdBy;
   DateTime dueDate;
   List<Attachment> attachments;
-  List<dynamic> submissions;
-  DateTime createdAt;
+  List<AssignmentSubmission> submissions;
+  DateTime createdAt; 
   DateTime updatedAt;
 
   AssignmentDetails({
@@ -34,7 +34,10 @@ class AssignmentDetails {
       attachments: (json['attachments'] as List)
           .map((attachment) => Attachment.fromJson(attachment))
           .toList(),
-      submissions: json['submissions'],
+      submissions: (json['submissions'] as List)
+        .map((s) => AssignmentSubmission.fromJson(s))
+        .toList(),
+
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
     );
@@ -111,3 +114,78 @@ class Attachment {
     };
   }
 }
+
+class AssignmentSubmission {
+  String student;
+  DateTime submittedAt;
+  List<SubmissionFile> files;
+  String id;
+
+  AssignmentSubmission({
+    required this.student,
+    required this.submittedAt,
+    required this.files,
+    required this.id,
+  });
+
+  factory AssignmentSubmission.fromJson(Map<String, dynamic> json) {
+    return AssignmentSubmission(
+      student: json['student'],
+      submittedAt: DateTime.parse(json['submittedAt']),
+      files: (json['files'] as List)
+          .map((f) => SubmissionFile.fromJson(f))
+          .toList(),
+      id: json['_id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'student': student,
+      'submittedAt': submittedAt.toIso8601String(),
+      'files': files.map((f) => f.toJson()).toList(),
+      '_id': id,
+    };
+  }
+}
+
+class SubmissionFile {
+  String fileId;
+  String filename;
+  String originalName;
+  int size;
+  String contentType;
+  String id;
+
+  SubmissionFile({
+    required this.fileId,
+    required this.filename,
+    required this.originalName,
+    required this.size,
+    required this.contentType,
+    required this.id,
+  });
+
+  factory SubmissionFile.fromJson(Map<String, dynamic> json) {
+    return SubmissionFile(
+      fileId: json['fileId'],
+      filename: json['filename'],
+      originalName: json['originalName'],
+      size: json['size'],
+      contentType: json['contentType'],
+      id: json['_id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'fileId': fileId,
+      'filename': filename,
+      'originalName': originalName,
+      'size': size,
+      'contentType': contentType,
+      '_id': id,
+    };
+  }
+}
+

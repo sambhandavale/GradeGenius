@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gradegenius/components/shared/drop_down.dart';
+import 'package:gradegenius/components/shared/toast.dart';
 
 
 class SignUpBox extends StatefulWidget {
@@ -11,10 +12,12 @@ class SignUpBox extends StatefulWidget {
     required String role,
   }) handleSignup;
   final Function(bool) setLoading;
+  final bool isLoading;
 
   const SignUpBox({
     required this.handleSignup,
     required this.setLoading, 
+    required this.isLoading,
     super.key,
   });
 
@@ -28,6 +31,13 @@ class _SignUpBoxState extends State<SignUpBox> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   var _roleSelected = 'teacher';
+  bool isLoading = false;
+
+  void setLoading(bool loading) {
+    setState(() {
+      isLoading = loading;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,13 +162,21 @@ class _SignUpBoxState extends State<SignUpBox> {
                   email: _emailController.text,
                   password: _passwordController.text,
                   role:_roleSelected,
-                );
+                ).then((_) => 
+                  setLoading(false))
+                  .catchError((error) {
+                    setLoading(false);
+                    showToast(
+                      message: 'An error occurred.',
+                      isError: true,
+                    );
+                  });;
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'SignIn',
+                    !isLoading ? 'SignUp' : 'Loading..',
                     style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,

@@ -188,7 +188,46 @@ class _AboutAssignmentState extends State<AboutAssignment> {
     }
   }
 
-  Future<void> openSubmissionFile(
+  Future<void> openSubmissionFileTeacher(
+    String assignmentId,
+    String studentId,
+    String fileId,
+  ) async {
+    try {
+      final response = await downloadSubmissionFile(assignmentId, studentId, fileId);
+
+      if (response['statusCode'] == 200) {
+        final bytes = Uint8List.fromList(response['bytes'] as List<int>);
+        final fileRecord = selectedSubmission.files[0];
+        final filename = fileRecord.filename;
+
+        final tempDir = await getTemporaryDirectory();
+        final tempPath = '${tempDir.path}/$filename';
+        final tempFile = File(tempPath);
+
+        await tempFile.writeAsBytes(bytes);
+
+        final result = await OpenFile.open(tempPath);
+
+        if (result.type != ResultType.done) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Could not open file: ${result.message}')),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error opening file: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+    }
+  }
+
+
+  Future<void> openSubmissionFileStudent(
     String assignmentId,
     String studentId,
     String fileId,
@@ -581,6 +620,7 @@ class _AboutAssignmentState extends State<AboutAssignment> {
               )).toList(),
             ),
             const SizedBox(height: 48,),
+            if(_user?.role == 'student' && assignmentSubmitted)
             const Text(
               'Your File',
               style: TextStyle(
@@ -591,6 +631,7 @@ class _AboutAssignmentState extends State<AboutAssignment> {
               ),
             ),
             const SizedBox(height: 10,),
+            if(_user?.role == 'student' && assignmentSubmitted)
             _buildSubmissionCard(
               name:  assignmentInfo.submissions.firstWhere(
                 (submission) => submission.student == _user?.id,
@@ -598,7 +639,7 @@ class _AboutAssignmentState extends State<AboutAssignment> {
               rollno: '', 
               onTap: (){
                 // shareAttachmentFile(assignmentInfo.attachments[0].fileId);
-                openSubmissionFile(
+                openSubmissionFileStudent(
                   assignmentInfo.id,
                   assignmentInfo.submissions.firstWhere(
                     (submission) => submission.student == _user?.id,
@@ -611,11 +652,12 @@ class _AboutAssignmentState extends State<AboutAssignment> {
               icon: 'assets/icons/common/download.svg',
               showIcon: false,
             ),
+            if(_user?.role == 'student' && assignmentSubmitted)
             Row(
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    openSubmissionFile(
+                    openSubmissionFileStudent(
                       assignmentInfo.id,
                       assignmentInfo.submissions.firstWhere(
                         (submission) => submission.student == _user?.id,
@@ -755,7 +797,7 @@ class _AboutAssignmentState extends State<AboutAssignment> {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    openSubmissionFile(
+                    openSubmissionFileTeacher(
                       assignmentInfo.id,
                       selectedSubmission.student.id,
                       selectedSubmission.files[0].fileId,

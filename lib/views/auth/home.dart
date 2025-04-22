@@ -137,11 +137,12 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.white,
+              Image.asset(
+                'assets/logo_nobg.png',
+                width: 32,
+                height: 32,
               ),
-              const SizedBox(width: 10,),
+              const SizedBox(width: 14,),
               Text(
                 "GradeGenius",
                 style: TextStyle(

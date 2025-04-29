@@ -7,12 +7,12 @@ import 'package:gradegenius/views/main/all_kaksha.dart';
 import 'package:gradegenius/views/main/quiz.dart';
 import 'package:gradegenius/views/main/landing_page.dart';
 import 'package:gradegenius/views/main/presentation.dart';
-import 'package:gradegenius/views/static/page_404.dart';
+import 'package:gradegenius/views/main/profilepage.dart';
 import 'package:provider/provider.dart';
 
 class HomeController extends StatefulWidget {
   const HomeController({super.key});
-
+  
   @override
   State<HomeController> createState() => _HomeControllerState();
 }
@@ -20,16 +20,16 @@ class HomeController extends StatefulWidget {
 class _HomeControllerState extends State<HomeController> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
-
+  
   User? _user;
-
+  
   @override
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     _user = authProvider.user;
   }
-
+  
   List<Widget> get _pages => [
     LandingPage(
       popup: false,
@@ -48,19 +48,19 @@ class _HomeControllerState extends State<HomeController> {
     PresentationPage(),
     AllKaksha(role: _user!.role,),
     QuizGeneratorPage(),
-    Page404(),
+    ProfilePage(role: _user!.role), 
   ];
-
+  
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constants.darkThemeBg,
+      backgroundColor: const Color.fromARGB(255, 253, 183, 183),
       body: Stack(
         children: [
           _pages[_selectedIndex],

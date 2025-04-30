@@ -39,7 +39,7 @@ class _InfoPopupState extends State<InfoPopup> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(top:20,bottom: 60,left:20,right:20),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 44, 44, 44),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),

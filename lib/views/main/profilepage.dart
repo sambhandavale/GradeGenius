@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gradegenius/components/shared/app_bar.dart';
 import 'package:intl/intl.dart';  // Import the intl package for date formatting
 import 'package:gradegenius/providers/authProvider.dart';
 import 'package:provider/provider.dart';
@@ -84,10 +85,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       backgroundColor: Constants.darkThemeBg,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false, // No back button
+      appBar: CustomGreetingAppBar(
+        avatarImage: AssetImage('assets/images/avatar.png'),
+        addLogout: true,
+        hidBack: true,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -98,7 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 // Header background
                 Container(
-                  height: 220,
+                  height: 150,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: headerColor,
@@ -113,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   bottom: -60,
                   child: CircleAvatar(
                     radius: 60,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     backgroundImage: user.userPhoto.isNotEmpty
                         ? NetworkImage(user.userPhoto)
                         : null,
